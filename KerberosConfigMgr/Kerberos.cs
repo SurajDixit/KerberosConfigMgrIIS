@@ -53,7 +53,7 @@ namespace KerberosConfigMgr
             button2.Enabled = false;
             StreamWriter w = new StreamWriter(filename, append: true);
             string date = DateTime.Now.ToString();
-            w.WriteLine("Start:" + date + "\r\n----------------------------------------------------------\r\n");
+            w.WriteLine("Start :" + date + "\r\n----------------------------------------------------------\r\n");
             w.Close();
 
         }
