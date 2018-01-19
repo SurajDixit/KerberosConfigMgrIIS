@@ -14,9 +14,16 @@ namespace KerberosConfigMgr
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Kerberos());
+            try {
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                Application.Run(new Kerberos());
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show(e+"" , "--Fatal Error--");
+            }
+            
         }
     }
 }

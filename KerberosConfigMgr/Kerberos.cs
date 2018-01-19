@@ -51,6 +51,7 @@ namespace KerberosConfigMgr
             button1.Enabled = false;
             button3.Enabled = false;
             button2.Enabled = false;
+            comboBox2.SelectedIndex = 0;
             StreamWriter w = new StreamWriter(filename, append: true);
             string date = DateTime.Now.ToString();
             w.WriteLine("Start :" + date + "\r\n----------------------------------------------------------\r\n");
@@ -72,6 +73,7 @@ namespace KerberosConfigMgr
             DialogResult result2 = MessageBox.Show("Are you sure you want to configure Kerberos for this website?", "Alert!", MessageBoxButtons.YesNo);
             if (result2.ToString().Equals("Yes"))
             {
+                comboBox2.Enabled = false;
                 button4.Enabled = false;
                 bool isUsingPoolIdentity = false;
                 String UName;
@@ -142,12 +144,12 @@ namespace KerberosConfigMgr
                     if (AnonymousBool == true)
                     {
                         anonymousAuthenticationSection["enabled"] = false;
-                        textBox1.Text += "Anonymous authentication is disabled..\r\n";
+                        textBox1.Text += "Anonymous authentication is disabled..(MODIFIED)\r\n";
                         isAnonymousChanged = true;
                     }
                     else
                     {
-                        textBox1.Text += "Anonymous authentication is already disabled..\r\n";
+                        textBox1.Text += "Anonymous authentication is already disabled...(NOT MODIFIED)\r\n";
                         isAnonymousChanged = false;
                     }
 
@@ -161,12 +163,12 @@ namespace KerberosConfigMgr
                     if (basicBool == true)
                     {
                         basicAuthenticationSection["enabled"] = false;
-                        textBox1.Text += "Basic authentication is disabled..\r\n";
+                        textBox1.Text += "Basic authentication is disabled..(MODIFIED)\r\n";
                         isBasicChanged = true;
                     }
                     else
                     {
-                        textBox1.Text += "Basic authentication is already disabled..\r\n";
+                        textBox1.Text += "Basic authentication is already disabled...(NOT MODIFIED)\r\n";
                         isBasicChanged = false;
                     }
 
@@ -180,12 +182,12 @@ namespace KerberosConfigMgr
                     if (digestBool == true)
                     {
                         digestAuthenticationSection["enabled"] = false;
-                        textBox1.Text += "Digest authentication is disabled..\r\n";
+                        textBox1.Text += "Digest authentication is disabled..(MODIFIED)\r\n";
                         isDigestChanged = true;
                     }
                     else
                     {
-                        textBox1.Text += "Digest authentication is already disabled..\r\n";
+                        textBox1.Text += "Digest authentication is already disabled...(NOT MODIFIED)\r\n";
                         isDigestChanged = false;
                     }
 
@@ -201,12 +203,12 @@ namespace KerberosConfigMgr
                     if (aspnetimpersonation == true)
                     {
                         identitySection["impersonate"] = false;
-                        textBox1.Text += "ASP.NET Impersonation is disabled..\r\n";
+                        textBox1.Text += "ASP.NET Impersonation is disabled..(MODIFIED)\r\n";
                         isAspnetImpersonationChanged = true;
                     }
                     else
                     {
-                        textBox1.Text += "ASP.NET Impersonation is already disabled..\r\n";
+                        textBox1.Text += "ASP.NET Impersonation is already disabled...(NOT MODIFIED)\r\n";
                         isAspnetImpersonationChanged = false;
                     }
 
@@ -219,12 +221,12 @@ namespace KerberosConfigMgr
                     if (windowsBool == false)
                     {
                         windowsAuthenticationSection["enabled"] = true;
-                        textBox1.Text += "Windows authentication is enabled..\r\n";
+                        textBox1.Text += "Windows authentication is enabled..(MODIFIED)\r\n";
                         isWindowsChanged = true;
                     }
                     else
                     {
-                        textBox1.Text += "Windows authentication is already enabled..\r\n";
+                        textBox1.Text += "Windows authentication is already enabled...(NOT MODIFIED)\r\n";
                         isWindowsChanged = false;
                     }
 
@@ -239,12 +241,12 @@ namespace KerberosConfigMgr
                     if (count == 1)
                     {
                         isNegotiateOnPriority = true;
-                        textBox1.Text += "Negotiate is on top..\r\n";
+                        textBox1.Text += "Negotiate is on top priority...(NOT MODIFIED)\r\n";
                     }
                     else if (count != 1)
                     {
                         isNegotiateOnPriority = false;
-                        textBox1.Text += "Negotiate is not a priority! Current Priority is " + onPriority + "..\r\n";
+                        textBox1.Text += "Negotiate is not a priority! Current Priority is " + onPriority + "...(NOT RECOMMENDED)\r\n";
                     }
 
                     Thread.Sleep(100);
@@ -263,7 +265,7 @@ namespace KerberosConfigMgr
                         {
                             searchOnPriority["value"] = "Negotiate";
                             searchNegotiate["value"] = onPriority;
-                            textBox1.Text += "Negotiate is the priority..\r\n";
+                            textBox1.Text += "Negotiate is the priority..(MODIFIED)\r\n";
                             Thread.Sleep(100);
                             System.Windows.Forms.Application.DoEvents();
                         }
@@ -303,7 +305,7 @@ namespace KerberosConfigMgr
                         if (isUseAppPoolChanged == true)
                         {
                             isUseAppPoolChanged = false;
-                            textBox1.Text += "useAppPoolCredentials Already set to true..\r\n";
+                            textBox1.Text += "useAppPoolCredentials Already set to true...(NOT MODIFIED)\r\n";
                             Thread.Sleep(100);
                             System.Windows.Forms.Application.DoEvents();
                         }
@@ -313,7 +315,7 @@ namespace KerberosConfigMgr
                             Thread.Sleep(100);
                             System.Windows.Forms.Application.DoEvents();
                             windowsAuthenticationSection["useAppPoolCredentials"] = true;
-                            textBox1.Text += "useAppPoolCredentials set to true..\r\n";
+                            textBox1.Text += "useAppPoolCredentials set to true..(MODIFIED)\r\n";
                             Thread.Sleep(100);
                             System.Windows.Forms.Application.DoEvents();
                             isUseAppPoolChanged = true;
@@ -327,7 +329,7 @@ namespace KerberosConfigMgr
                         if (isUseAppPoolChanged == false)
                         {
                             isUseAppPoolChanged = false;
-                            textBox1.Text += "useAppPoolCredentials Already set to false..\r\n";
+                            textBox1.Text += "useAppPoolCredentials Already set to false...(NOT MODIFIED)\r\n";
                             Thread.Sleep(100);
                             System.Windows.Forms.Application.DoEvents();
                         }
@@ -337,7 +339,7 @@ namespace KerberosConfigMgr
                             Thread.Sleep(100);
                             System.Windows.Forms.Application.DoEvents();
                             windowsAuthenticationSection["useAppPoolCredentials"] = false;
-                            textBox1.Text += "useAppPoolCredentials set to false..\r\n";
+                            textBox1.Text += "useAppPoolCredentials set to false..(MODIFIED)\r\n";
                             Thread.Sleep(100);
                             System.Windows.Forms.Application.DoEvents();
                             isUseAppPoolChanged = true;
@@ -345,7 +347,7 @@ namespace KerberosConfigMgr
                         if (isUseKernelChanged == true)
                         {
                             isUseAppPoolChanged = false;
-                            textBox1.Text += "useKernelMode Already set to true..\r\n";
+                            textBox1.Text += "useKernelMode Already set to true..(NOT MODIFIED)\r\n";
                             Thread.Sleep(100);
                             System.Windows.Forms.Application.DoEvents();
                         }
@@ -355,7 +357,7 @@ namespace KerberosConfigMgr
                             Thread.Sleep(100);
                             System.Windows.Forms.Application.DoEvents();
                             windowsAuthenticationSection["useKernelMode"] = true;
-                            textBox1.Text += "useKernelMode set to true..\r\n";
+                            textBox1.Text += "useKernelMode set to true..(MODIFIED)\r\n";
                             Thread.Sleep(100);
                             System.Windows.Forms.Application.DoEvents();
                             isUseKernelChanged = true;
@@ -482,14 +484,19 @@ namespace KerberosConfigMgr
 
                     DialogResult result1 = MessageBox.Show("Are you using hostname for the website?", "Alert!", MessageBoxButtons.YesNo);
 
-                    if (result1.ToString().Equals("Yes"))
+                    Label: if (result1.ToString().Equals("Yes"))
                     {
-                        string customHostName = "";
+                       string customHostName = "";
                         while (customHostName == "")
                         {
                             customHostName = Prompt.ShowDialog("Enter the hostname:", "Important!");
                             if (customHostName == "")
+                            {
                                 MessageBox.Show("No hostname is entered!", "Error!");
+                                result1 = MessageBox.Show("Are you using hostname for the website?", "Alert!", MessageBoxButtons.YesNo);
+                                goto Label;
+                            }
+                                
                         }
 
                         textBox1.Text += "\r\nThe hostname you entered is : " + customHostName + "\r\n";
@@ -619,7 +626,7 @@ namespace KerberosConfigMgr
                     }
 
                     progressBar1.Value = 80;
-                    textBox1.Text += "\r\nYou can download cmdlet by clicking the below button to set SPNs\r\n";
+                    textBox1.Text += "\r\nYou can Generate cmdlet by clicking the below button to set SPNs on DC\r\n";
                     textBox1.Text += "=====================================================\r\n";
                     button4.Enabled = true;
                     Thread.Sleep(100);
@@ -635,8 +642,11 @@ namespace KerberosConfigMgr
                     w.WriteLine("Currently Logged-in User : " + userName + "\r\n");
                     w.WriteLine(textBox1.Text);
                     w.Close();
+                    MessageBox.Show("Site has been configured with Kerberos successfully!", "Success!");
                 }
             }
+
+            
         }
 
         private void InputBox()
@@ -724,11 +734,18 @@ namespace KerberosConfigMgr
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
             button2.Enabled = true;
+            button1.Enabled = false;
+            button3.Enabled = false;
+            //comboBox2.Enabled = false;
         }
 
         private void Kerberos_Load(object sender, EventArgs e)
         {
-
+            System.Windows.Forms.ToolTip ToolTip1 = new System.Windows.Forms.ToolTip();
+            ToolTip1.SetToolTip(this.button2, "Reviews all the current settings for the selected site.");
+            ToolTip1.SetToolTip(this.button1, "Configures Kerberos for the selected site.");
+            ToolTip1.SetToolTip(this.button3, "Reverts all the changes which were made in previous click for the selected site.");
+            ToolTip1.SetToolTip(this.button4, "Generates the script for setting up SPNs required for the selected site to make kerberos work.");
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -748,7 +765,7 @@ namespace KerberosConfigMgr
                 fs.Close();
             }
             spnValue.Clear();
-            MessageBox.Show("File saved to current directory...", "Success!");
+            MessageBox.Show("Script Generated and saved to current directory!", "Success!");
             button4.Enabled = false;
         }
         string app1;
@@ -825,18 +842,18 @@ namespace KerberosConfigMgr
                     ConfigurationSection anonymousAuthenticationSection = config.GetSection("system.webServer/security/authentication/anonymousAuthentication", selectedSite);
                     bool anonymous = (bool)anonymousAuthenticationSection["enabled"];
                     if (anonymous == true)
-                        textBox1.Text += "Anonymous authentication is enabled. It should be disabled for Kerberos Authentication...\r\n";
+                        textBox1.Text += "Anonymous authentication is enabled...(NOT RECOMMENDED)\r\n";
                     else
-                        textBox1.Text += "Anonymous authentication is disabled..\r\n";
+                        textBox1.Text += "Anonymous authentication is disabled...(RECOMMENDED)\r\n";
                     Thread.Sleep(100);
                     System.Windows.Forms.Application.DoEvents();
 
                     ConfigurationSection basicAuthenticationSection = config.GetSection("system.webServer/security/authentication/basicAuthentication", selectedSite);
                     bool basic = (bool)basicAuthenticationSection["enabled"];
                     if (basic == true)
-                        textBox1.Text += "Basic authentication is enabled. It should be disabled for Kerberos Authentication...\r\n";
+                        textBox1.Text += "Basic authentication is enabled...(NOT RECOMMENDED)\r\n";
                     else
-                        textBox1.Text += "Basic authentication is disabled..\r\n";
+                        textBox1.Text += "Basic authentication is disabled...(RECOMMENDED)\r\n";
 
                     Thread.Sleep(100);
                     System.Windows.Forms.Application.DoEvents();
@@ -844,9 +861,9 @@ namespace KerberosConfigMgr
                     ConfigurationSection digestAuthenticationSection = config.GetSection("system.webServer/security/authentication/digestAuthentication", selectedSite);
                     bool digest = (bool)digestAuthenticationSection["enabled"];
                     if (digest == true)
-                        textBox1.Text += "Digest authentication is enabled. It should be disabled for Kerberos Authentication...\r\n";
+                        textBox1.Text += "Digest authentication is enabled...(NOT RECOMMENDED)\r\n";
                     else
-                        textBox1.Text += "Digest authentication is disabled..\r\n";
+                        textBox1.Text += "Digest authentication is disabled...(RECOMMENDED)\r\n";
                     Thread.Sleep(100);
                     System.Windows.Forms.Application.DoEvents();
 
@@ -856,9 +873,9 @@ namespace KerberosConfigMgr
                     bool aspnetimpersonation = (bool)identitySection["impersonate"];
 
                     if (aspnetimpersonation == true)
-                        textBox1.Text += "ASP.NET Impersonation is enabled..\r\n";
+                        textBox1.Text += "ASP.NET Impersonation is enabled...(NOT RECOMMENDED)\r\n";
                     else
-                        textBox1.Text += "ASP.NET Impersonation is disabled..\r\n";
+                        textBox1.Text += "ASP.NET Impersonation is disabled...(RECOMMENDED)\r\n";
 
                     Thread.Sleep(100);
                     System.Windows.Forms.Application.DoEvents();
@@ -868,9 +885,9 @@ namespace KerberosConfigMgr
                     bool win = (bool)windowsAuthenticationSection["enabled"];
 
                     if (win == false)
-                        textBox1.Text += "Windows authentication is disabled. It should be enabled for Kerberos Authentication...\r\n";
+                        textBox1.Text += "Windows authentication is disabled...(NOT RECOMMENDED)\r\n";
                     else
-                        textBox1.Text += "Windows authentication is enabled. It should be disabled for Kerberos Authentication...\r\n";
+                        textBox1.Text += "Windows authentication is enabled...(RECOMMENDED)\r\n";
                     Thread.Sleep(100);
                     System.Windows.Forms.Application.DoEvents();
                     progressBar1.Value = 40;
@@ -882,12 +899,12 @@ namespace KerberosConfigMgr
                     if (count == 1)
                     {
                         isNegotiateOnPriority = true;
-                        textBox1.Text += "Negotiate is on priority..\r\n";
+                        textBox1.Text += "Negotiate is on priority...(RECOMMENDED)\r\n";
                     }
                     else if (count != 1)
                     {
                         isNegotiateOnPriority = false;
-                        textBox1.Text += "Negotiate is not a priority! Current Priority is " + onPriority + "..\r\n";
+                        textBox1.Text += "Negotiate is not a priority! Current Priority is " + onPriority + "..(NOT RECOMMENDED)\r\n";
                         textBox1.Text += "Negotiate should be a top priority..\r\n";
                     }
 
@@ -922,9 +939,9 @@ namespace KerberosConfigMgr
                     {
                         bool useAppPool = (bool)windowsAuthenticationSection["useAppPoolCredentials"];
                         if (useAppPool == true)
-                            textBox1.Text += "useAppPoolCredentials set to true..\r\n";
+                            textBox1.Text += "useAppPoolCredentials set to true...(RECOMMENDED)\r\n";
                         else
-                            textBox1.Text += "useAppPoolCredentials set to false..\r\n";
+                            textBox1.Text += "useAppPoolCredentials set to false..(NOT RECOMMENDED)\r\n";
                         Thread.Sleep(100);
                         System.Windows.Forms.Application.DoEvents();
 
@@ -940,17 +957,17 @@ namespace KerberosConfigMgr
                     {
                         bool useAppPool = (bool)windowsAuthenticationSection["useAppPoolCredentials"];
                         if (useAppPool == true)
-                            textBox1.Text += "useAppPoolCredentials set to true..\r\n";
+                            textBox1.Text += "useAppPoolCredentials set to true...(NOT RECOMMENDED)\r\n";
                         else
-                            textBox1.Text += "useAppPoolCredentials set to false..\r\n";
+                            textBox1.Text += "useAppPoolCredentials set to false...(RECOMMENDED)\r\n";
                         Thread.Sleep(100);
                         System.Windows.Forms.Application.DoEvents();
 
                         bool useKernel = (bool)windowsAuthenticationSection["useKernelMode"];
                         if (useKernel == true)
-                            textBox1.Text += "useKernelMode set to true..\r\n";
+                            textBox1.Text += "useKernelMode set to true...(RECOMMENDED)\r\n";
                         else
-                            textBox1.Text += "useKernelMode set to false..\r\n";
+                            textBox1.Text += "useKernelMode set to false..(NOT RECOMMENDED)\r\n";
                         Thread.Sleep(100);
                         System.Windows.Forms.Application.DoEvents();
                     }
@@ -1075,14 +1092,19 @@ namespace KerberosConfigMgr
 
                     DialogResult result1 = MessageBox.Show("Are you using hostname for the website?", "Alert!", MessageBoxButtons.YesNo);
 
-                    if (result1.ToString().Equals("Yes"))
+                    Label: if (result1.ToString().Equals("Yes"))
                     {
                         string customHostName = "";
                         while (customHostName == "")
                         {
                             customHostName = Prompt.ShowDialog("Enter the hostname:", "Important!");
                             if (customHostName == "")
+                            {
                                 MessageBox.Show("No hostname is entered!", "Error!");
+                                result1 = MessageBox.Show("Are you using hostname for the website?", "Alert!", MessageBoxButtons.YesNo);
+                                goto Label;
+                            }
+                                
                         }
 
                         textBox1.Text += "\r\nThe hostname you entered is : " + customHostName + "\r\n";
@@ -1142,7 +1164,7 @@ namespace KerberosConfigMgr
                             }
                         }
 
-                        textBox1.Text += "=======================\r\n";
+                        textBox1.Text += "====================================================\r\n";
                         Thread.Sleep(100);
                         System.Windows.Forms.Application.DoEvents();
                     }
@@ -1166,6 +1188,7 @@ namespace KerberosConfigMgr
                                 string fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName;
                                 textBox1.Text += "HTTP/" + fqdn + "\r\n";
                                 textBox1.Text += "\r\nSPNs should be on account:" + UName + "\r\n";
+                                textBox1.Text += "====================================================\r\n";
                                 Thread.Sleep(100);
                                 System.Windows.Forms.Application.DoEvents();
                             }
@@ -1185,6 +1208,7 @@ namespace KerberosConfigMgr
                                 string fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName;
                                 textBox1.Text += "HOST/" + fqdn + "\r\n";
                                 textBox1.Text += "\r\nSPNs should be on account:" + computerName + "\r\n";
+                                textBox1.Text += "====================================================\r\n";
                                 Thread.Sleep(100);
                                 System.Windows.Forms.Application.DoEvents();
                             }
@@ -1195,11 +1219,6 @@ namespace KerberosConfigMgr
                             }
 
                         }
-
-                        textBox1.Text += "==================================================\r\n";
-                        Thread.Sleep(100);
-                        System.Windows.Forms.Application.DoEvents();
-
                     }
                     progressBar1.Value = 80;
                     progressBar1.Value = 100;
@@ -1211,6 +1230,7 @@ namespace KerberosConfigMgr
                     w.WriteLine("Currently Logged-in User : " + userName + "\r\n");
                     w.WriteLine(textBox1.Text);
                     w.Close();
+                    MessageBox.Show(text: "Review Complete!", caption: "Success!");
                 }
             }
         }
@@ -1459,6 +1479,7 @@ namespace KerberosConfigMgr
                 w.WriteLine("Currently Logged-in User : " + userName + "\r\n");
                 w.WriteLine(textBox1.Text);
                 w.Close();
+                MessageBox.Show("All the settings have been reverted successfully!", "Success!");
             }
         }
     }
