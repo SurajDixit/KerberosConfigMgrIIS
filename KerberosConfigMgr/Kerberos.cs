@@ -1248,7 +1248,7 @@ namespace KerberosConfigMgr
                     w.WriteLine("Currently Logged-in User : " + userName + "\r\n");
                     w.WriteLine(textBox1.Text);
                     w.Close();
-                    MessageBox.Show(text: "Review Complete!", caption: "Success!");
+                    MessageBox.Show(text: "Review for the selected website completed successfully!", caption: "Success!");
                 }
             }
         }
