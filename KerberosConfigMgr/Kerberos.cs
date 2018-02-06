@@ -241,7 +241,7 @@ namespace KerberosConfigMgr
                     if (count == 1)
                     {
                         isNegotiateOnPriority = true;
-                        textBox1.Text += "Negotiate is on top priority...(NOT MODIFIED)\r\n";
+                        textBox1.Text += "Negotiate is on top priority...\r\n";
                     }
                     else if (count != 1)
                     {
@@ -301,7 +301,7 @@ namespace KerberosConfigMgr
                     if (isUsingPoolIdentity == true)
                     {
                         isUseAppPoolChanged = (bool)windowsAuthenticationSection["useAppPoolCredentials"];
-                        isUseKernelChanged = false;
+                        isUseKernelChanged = (bool)windowsAuthenticationSection["useKernelMode"];
                         if (isUseAppPoolChanged == true)
                         {
                             isUseAppPoolChanged = false;
@@ -319,6 +319,24 @@ namespace KerberosConfigMgr
                             Thread.Sleep(100);
                             System.Windows.Forms.Application.DoEvents();
                             isUseAppPoolChanged = true;
+                        }
+                        if (isUseKernelChanged == true)
+                        {
+                            isUseAppPoolChanged = false;
+                            textBox1.Text += "useKernelMode Already set to true...(NOT MODIFIED)\r\n";
+                            Thread.Sleep(100);
+                            System.Windows.Forms.Application.DoEvents();
+                        }
+                        else
+                        {
+                            textBox1.Text += "Setting useKernelMode to true..\r\n";
+                            Thread.Sleep(100);
+                            System.Windows.Forms.Application.DoEvents();
+                            windowsAuthenticationSection["useKernelMode"] = true;
+                            textBox1.Text += "useKernelMode set to true..(MODIFIED)\r\n";
+                            Thread.Sleep(100);
+                            System.Windows.Forms.Application.DoEvents();
+                            isUseKernelChanged = true;
                         }
 
                     }
