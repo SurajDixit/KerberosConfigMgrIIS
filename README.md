@@ -28,5 +28,5 @@ To address these issues, I have created the “Kerberos Configuration Manager fo
 <li>Auditing support which makes troubleshooting Kerberos easier.</li>
 </ul>	
 
-For documentation follow the below blog: 
+For documentation on how to use, follow the below blog: 
 
