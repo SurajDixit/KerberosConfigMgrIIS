@@ -1,22 +1,32 @@
-Many of us find troubleshooting Kerberos quite a tedious task since it involves multiple levels of troubleshooting. This blog is meant to demystify the art of troubleshooting Kerberos.
+Many of us find troubleshooting Kerberos quite a tedious task since it involves multiple levels of troubleshooting.
 
-Why is Kerberos painful at times?
+<b>Why is Kerberos painful at times?</b>
 
-First, understanding Kerberos is quite tricky.
-Configuration takes a lot of time as we need to look at configuration of IIS server, Domain controller and Client side.
-Once a site breaks because of some configuration related issues, it’s really difficult to identify the exact cause because of the complexity.
+<ul>
+<li>First, understanding Kerberos is quite tricky.</li>
+<li>Configuration takes a lot of time as we need to look at configuration of IIS server, Domain controller and Client side.</li>
+<li>Once a site breaks because of some configuration related issues, it’s really difficult to identify the exact cause because of the complexity.</li>
+</ul>
 
 This is a simple troubleshooter “Kerberos Configuration Manager for IIS” which allows one to do the following tasks:
 
-1. Review the current settings related to Kerberos for any specific website in IIS.
-2. Configures Kerberos for the affected website:
-3. It also has a provision to revert the changes made just in case there is a requirement.
-4. It also has a feature of auditing through a log file which would capture the below details:
+<ul>
+<li>Review the current settings related to Kerberos for any specific website in IIS.</li>
+<li>Configures Kerberos for the affected website:</li>
+<li>It also has a provision to revert the changes made just in case there is a requirement.</li>
+<li>It also has a feature of auditing through a log file.</li>
+</ul>
 
-Why should I use tool?:
+<b>Why should I use tool?</b>
 
-Troubleshooting Kerberos just becomes much simpler with this tool and it optimizes the time taken to troubleshoot from few hours to few minutes.
-You can review the Kerberos Configuration for any of your web sites and share the generated log files with support to save precious troubleshooting time.
-	
+<ul>
+<li>Troubleshooting Kerberos just becomes much simpler with this tool and it optimizes the time taken to troubleshoot from few hours to few minutes.</li>
+<li>You can review the Kerberos Configuration for any of your web sites and share the generated log files with support to save precious troubleshooting time.</li>
+<li>No need to install the tool -  it’s a standalone executable.</li>
+<li>Disk space utilization is minimal.</li>
+<li>Open source, free to download and modify.</li>
+<li>Auditing support which makes troubleshooting Kerberos easier.</li>
+</ul>	
+
 For documentation follow the below blog: 
 
