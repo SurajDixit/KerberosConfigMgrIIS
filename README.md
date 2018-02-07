@@ -30,3 +30,4 @@ To address these issues, I have created the “Kerberos Configuration Manager fo
 
 For documentation on how to use, follow the below blog: 
 
+https://blogs.msdn.microsoft.com/surajdixit/2018/02/07/kerberos-configuration-manager-for-internet-information-services-server/
