@@ -1,4 +1,4 @@
-Many of us find troubleshooting Kerberos quite a tedious task since it involves multiple levels of troubleshooting.
+Many of us find troubleshooting Kerberos quite a tedious task since it involves multiple levels of troubleshooting. Today, inorder to configure kerberos we need to go through the set of steps which is really time consuming and of high complexity.
 
 <b>Why is Kerberos painful at times?</b>
 
@@ -8,11 +8,11 @@ Many of us find troubleshooting Kerberos quite a tedious task since it involves 
 <li>Once a site breaks because of some configuration related issues, it’s really difficult to identify the exact cause because of the complexity.</li>
 </ul>
 
-This is a simple troubleshooter “Kerberos Configuration Manager for IIS” which allows one to do the following tasks:
+To address these issues, I have created the “Kerberos Configuration Manager for IIS”. This tool configures Kerberos single hop on any site by reading and modifying the Configration files. This reduces both time spent.This tool allows one to do the following tasks:
 
 <ul>
 <li>Review the current settings related to Kerberos for any specific website in IIS.</li>
-<li>Configures Kerberos for the affected website:</li>
+<li>Configures Kerberos for the affected website</li>
 <li>It also has a provision to revert the changes made just in case there is a requirement.</li>
 <li>It also has a feature of auditing through a log file.</li>
 </ul>
