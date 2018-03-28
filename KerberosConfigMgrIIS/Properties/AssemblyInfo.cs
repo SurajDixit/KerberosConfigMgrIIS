@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("KerberosConfigMgrIIS")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("KerberosConfigMgrIIS")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("KerberosConfigMgrIIS")]
