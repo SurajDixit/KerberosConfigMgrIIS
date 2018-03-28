@@ -23,11 +23,19 @@ namespace KerberosConfigMgr
         List<string> spnValue = new List<string>();
         bool isAppPoolSetGlobal = false;
         string UserGlobal;
+        string UserGlobalDeleg;
+        bool isUsingCustomAppPoolDelegation = false;
         static string day = DateTime.Today.Date.Day.ToString();
         static string month = DateTime.Today.Date.Month.ToString();
         static string year = DateTime.Today.Date.Year.ToString();
         static string filename = "k_log" + "_" + day + "_" + month + "_" + year + ".log";
 
+        [Flags()]
+        public enum UserAccountControl : int
+        {
+            TRUSTED_FOR_DELEGATION = 0x00080000,
+            TRUSTED_TO_AUTH_FOR_DELEGATION = 0x1000000,
+        }
         public Kerberos()
         {
 
@@ -70,6 +78,9 @@ namespace KerberosConfigMgr
         bool isUseKernelChanged = false;
         private void button1_Click(object sender, EventArgs e)
         {
+            radioButton1.Enabled = false;
+            radioButton2.Enabled = false;
+            button1.Enabled = false;
             DialogResult result2 = MessageBox.Show("Are you sure you want to configure Kerberos for this website?", "Alert!", MessageBoxButtons.YesNo);
             if (result2.ToString().Equals("Yes"))
             {
@@ -87,8 +98,28 @@ namespace KerberosConfigMgr
                 }
                 else
                 {
+                    //<summary>
+                    //To check if user wants to query DC for delegation settings
+                    //based on this one more function is written for delegation query
+                    //</summary>
+
+                    bool DelegationQuery = false;
+
+                    if (radioButton2.Checked == true)
+                    {
+                        DelegationQuery = true;  
+                    }
+                    else if (radioButton1.Checked == true)
+                    {
+                        DelegationQuery = false;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Please select one of the Radio buttons for Single Hop or Pass Through Authentication!", "Alert!");
+                        return;
+                    }
                     bool isAnApplication = false;
-                    textBox1.Text = "Configure\r\n===================\r\n\r\n";
+                    textBox1.Text = "Configure\r\n===================\r\n";
                     Thread.Sleep(100);
                     System.Windows.Forms.Application.DoEvents();
 
@@ -196,22 +227,44 @@ namespace KerberosConfigMgr
                     System.Windows.Forms.Application.DoEvents();
                     progressBar1.Value = 30;
 
+
+
                     Configuration config1 = serverMgr.GetWebConfiguration(selectedSite);
                     ConfigurationSection identitySection = config1.GetSection("system.web/identity");
                     bool aspnetimpersonation = (bool)identitySection["impersonate"];
 
-                    if (aspnetimpersonation == true)
+                    //<summary>
+                    //Validating ASP.NET Impersonation settings
+                    //</summary>
+
+                    if (DelegationQuery == false)
                     {
-                        identitySection["impersonate"] = false;
-                        textBox1.Text += "ASP.NET Impersonation is disabled..(MODIFIED)\r\n";
-                        isAspnetImpersonationChanged = true;
+                        if (aspnetimpersonation == true)
+                        {
+                            identitySection["impersonate"] = false;
+                            textBox1.Text += "ASP.NET Impersonation is disabled..(MODIFIED)\r\n";
+                            isAspnetImpersonationChanged = true;
+                        }
+                        else
+                        {
+                            textBox1.Text += "ASP.NET Impersonation is already disabled...(NOT MODIFIED)\r\n";
+                            isAspnetImpersonationChanged = false;
+                        }
                     }
                     else
                     {
-                        textBox1.Text += "ASP.NET Impersonation is already disabled...(NOT MODIFIED)\r\n";
-                        isAspnetImpersonationChanged = false;
+                        if (aspnetimpersonation == true)
+                        {
+                            textBox1.Text += "ASP.NET Impersonation is already enabled..(NOT MODIFIED)\r\n";
+                            isAspnetImpersonationChanged = false;
+                        }
+                        else
+                        {
+                            identitySection["impersonate"] = true;
+                            textBox1.Text += "ASP.NET Impersonation is enabled...(MODIFIED)\r\n";
+                            isAspnetImpersonationChanged = true;
+                        }
                     }
-
 
                     Thread.Sleep(100);
                     System.Windows.Forms.Application.DoEvents();
@@ -280,12 +333,12 @@ namespace KerberosConfigMgr
 
                     ApplicationPool pool = serverMgr.ApplicationPools[getPool];
                     String poolIdentity = pool.ProcessModel.IdentityType.ToString();
-
+                    String poolUser;
 
                     if (poolIdentity == "SpecificUser")
                     {
                         isUsingPoolIdentity = true;
-                        UName = pool.ProcessModel.UserName;
+                        UName = poolUser = pool.ProcessModel.UserName;
                         textBox1.Text += "You are using a custom identity : " + UName + "..\r\n";
                         Thread.Sleep(100);
                         System.Windows.Forms.Application.DoEvents();
@@ -293,6 +346,7 @@ namespace KerberosConfigMgr
                     else
                     {
                         isUsingPoolIdentity = false;
+                        poolUser = poolUser = System.Environment.GetEnvironmentVariable("COMPUTERNAME");
                         textBox1.Text += "You are using a builtin account : " + poolIdentity + "..\r\n";
                         Thread.Sleep(100);
                         System.Windows.Forms.Application.DoEvents();
@@ -382,123 +436,245 @@ namespace KerberosConfigMgr
                         }
                     }
 
-                    textBox1.Text += "Fetching SPNs for the account set for Application pool identity..\r\n";
+                    textBox1.Text += "==================================================\r\n";
                     Thread.Sleep(100);
                     System.Windows.Forms.Application.DoEvents();
-                    if (isUsingPoolIdentity == true)
+
+                    //<summary>
+                    //Adding the condition to check if user wants to see the available SPNs
+                    //This will query the DC for SPNs
+                    //<summary>
+
+                    DialogResult QuerySPNDialogueConfigure = MessageBox.Show("Are you sure you want to fetch the currently available SPNs for the service?", "Alert!", MessageBoxButtons.YesNo);
+                    if (QuerySPNDialogueConfigure.ToString().Equals("Yes"))
                     {
-                        isAppPoolSetGlobal = isUsingPoolIdentity;
-                        bool isSetSPNsSmall = false;
-                        UName = pool.ProcessModel.UserName;
-                        bool isSetSPNsCaps = false;
-                        textBox1.Text += "\r\nBelow are the SPNs set for the Custom account: " + UName + "\r\n";
+                        textBox1.Text += "\r\nFetching SPNs for the account set for Application pool identity..\r\n";
                         Thread.Sleep(100);
                         System.Windows.Forms.Application.DoEvents();
-                        textBox1.Text += "==================================================\r\n";
-                        Thread.Sleep(100);
-                        System.Windows.Forms.Application.DoEvents();
-                        UName = pool.ProcessModel.UserName;
-                        UserGlobal = UName;
-                        string[] split = UName.Split('\\');
-                        foreach (string value in ListSPN("HTTP", split[1]))
+                        if (isUsingPoolIdentity == true)
                         {
-                            if (value != null)
+                            isAppPoolSetGlobal = isUsingPoolIdentity;
+                            bool isSetSPNsSmall = false;
+                            UName = pool.ProcessModel.UserName;
+                            bool isSetSPNsCaps = false;
+                            textBox1.Text += "\r\nBelow are the SPNs set for the Custom account: " + UName + "\r\n";
+                            Thread.Sleep(100);
+                            System.Windows.Forms.Application.DoEvents();
+                            textBox1.Text += "==================================================\r\n";
+                            Thread.Sleep(100);
+                            System.Windows.Forms.Application.DoEvents();
+                            UName = pool.ProcessModel.UserName;
+                            UserGlobal = UName;
+                            string[] split = UName.Split('\\');
+                            UserGlobalDeleg = split[1];
+                            isUsingCustomAppPoolDelegation = true;
+                            foreach (string value in ListSPN("HTTP", split[1]))
                             {
-                                textBox1.Text += value + "\r\n";
+                                if (value != null)
+                                {
+                                    textBox1.Text += value + "\r\n";
+                                    Thread.Sleep(100);
+                                    System.Windows.Forms.Application.DoEvents();
+                                    isSetSPNsSmall = true;
+                                }
+                                else
+                                {
+                                    isSetSPNsSmall = false;
+                                }
+
+                            }
+
+                            foreach (string value in ListSPN("http", split[1]))
+                            {
+                                if (value != null)
+                                {
+                                    textBox1.Text += value + "\r\n";
+                                    Thread.Sleep(100);
+                                    System.Windows.Forms.Application.DoEvents();
+                                    isSetSPNsCaps = true;
+                                }
+                                else
+                                {
+                                    isSetSPNsCaps = false;
+                                }
+
+                            }
+
+                            if (isSetSPNsCaps == false && isSetSPNsSmall == false)
+                            {
+                                textBox1.Text += "No SPNs set for this account\r\n";
                                 Thread.Sleep(100);
                                 System.Windows.Forms.Application.DoEvents();
-                                isSetSPNsSmall = true;
-                            }
-                            else
-                            {
-                                isSetSPNsSmall = false;
                             }
 
-                        }
-
-                        foreach (string value in ListSPN("http", split[1]))
-                        {
-                            if (value != null)
-                            {
-                                textBox1.Text += value + "\r\n";
-                                Thread.Sleep(100);
-                                System.Windows.Forms.Application.DoEvents();
-                                isSetSPNsCaps = true;
-                            }
-                            else
-                            {
-                                isSetSPNsCaps = false;
-                            }
-
-                        }
-
-                        if (isSetSPNsCaps == false && isSetSPNsSmall == false)
-                        {
-                            textBox1.Text += "No SPNs set for this account\r\n";
+                            textBox1.Text += "==================================================\r\n";
                             Thread.Sleep(100);
                             System.Windows.Forms.Application.DoEvents();
                         }
 
-                        textBox1.Text += "==================================================\r\n";
-                        Thread.Sleep(100);
-                        System.Windows.Forms.Application.DoEvents();
-                    }
-
-                    else
-                    {
-                        bool isSetSPNsSmall = false;
-                        bool isSetSPNsCaps = false;
-                        string computerName = System.Environment.GetEnvironmentVariable("COMPUTERNAME");
-                        isAppPoolSetGlobal = false;
-                        UserGlobal = computerName;
-                        textBox1.Text += "\r\nBelow are the SPNs set for the " + computerName + " account:\r\n";
-                        Thread.Sleep(100);
-                        System.Windows.Forms.Application.DoEvents();
-                        textBox1.Text += "==================================================\r\n";
-                        Thread.Sleep(100);
-                        System.Windows.Forms.Application.DoEvents();
-                        foreach (string value in ListSPN("HOST", computerName))
+                        else
                         {
-                            if (value != null)
+                            bool isSetSPNsSmall = false;
+                            bool isSetSPNsCaps = false;
+                            string computerName = System.Environment.GetEnvironmentVariable("COMPUTERNAME");
+                            isAppPoolSetGlobal = false;
+                            UserGlobal = computerName;
+                            UserGlobalDeleg = computerName;
+                            isUsingCustomAppPoolDelegation = false;
+                            textBox1.Text += "\r\nBelow are the SPNs set for the " + computerName + " account:\r\n";
+                            Thread.Sleep(100);
+                            System.Windows.Forms.Application.DoEvents();
+                            textBox1.Text += "==================================================\r\n";
+                            Thread.Sleep(100);
+                            System.Windows.Forms.Application.DoEvents();
+                            foreach (string value in ListSPN("HOST", computerName))
                             {
-                                textBox1.Text += value + "\r\n";
+                                if (value != null)
+                                {
+                                    textBox1.Text += value + "\r\n";
+                                    Thread.Sleep(100);
+                                    System.Windows.Forms.Application.DoEvents();
+                                    isSetSPNsSmall = true;
+                                }
+                                else
+                                {
+                                    isSetSPNsSmall = false;
+                                }
+
+                            }
+
+                            foreach (string value in ListSPN("host", computerName))
+                            {
+                                if (value != null)
+                                {
+                                    textBox1.Text += value + "\r\n";
+                                    Thread.Sleep(100);
+                                    System.Windows.Forms.Application.DoEvents();
+                                    isSetSPNsCaps = true;
+                                }
+                                else
+                                    isSetSPNsCaps = false;
+                            }
+
+                            if (isSetSPNsCaps == false && isSetSPNsSmall == false)
+                            {
+                                textBox1.Text += "No SPNs set for this account\r\n";
                                 Thread.Sleep(100);
                                 System.Windows.Forms.Application.DoEvents();
-                                isSetSPNsSmall = true;
-                            }
-                            else
-                            {
-                                isSetSPNsSmall = false;
                             }
 
-                        }
-
-                        foreach (string value in ListSPN("host", computerName))
-                        {
-                            if (value != null)
-                            {
-                                textBox1.Text += value + "\r\n";
-                                Thread.Sleep(100);
-                                System.Windows.Forms.Application.DoEvents();
-                                isSetSPNsCaps = true;
-                            }
-                            else
-                                isSetSPNsCaps = false;
-                        }
-
-                        if (isSetSPNsCaps == false && isSetSPNsSmall == false)
-                        {
-                            textBox1.Text += "No SPNs set for this account\r\n";
+                            textBox1.Text += "==================================================\r\n";
                             Thread.Sleep(100);
                             System.Windows.Forms.Application.DoEvents();
                         }
-
-                        textBox1.Text += "==================================================\r\n";
-                        Thread.Sleep(100);
-                        System.Windows.Forms.Application.DoEvents();
                     }
 
                     progressBar1.Value = 70;
+
+                    //<summary>
+                    //Query Domain controller for Delegation settings for the application pool credentials (machine account or custom account)
+                    //</summary>
+
+                    bool isDelegationSet = false;
+                    bool isConstrainedDelegationSet = false;
+
+                    try
+                    {
+                        if (DelegationQuery == true)
+                        {
+                            textBox1.Text += "\r\nDelegation Settings:\r\n";
+                            textBox1.Text += "==================================================\r\n";
+                            Thread.Sleep(100);
+                            System.Windows.Forms.Application.DoEvents();
+                            using (Domain domain = Domain.GetCurrentDomain())
+                            {
+                                DirectoryEntry ouDn = new DirectoryEntry();
+                                DirectorySearcher search = new DirectorySearcher(ouDn);
+                                if (isUsingPoolIdentity == true)
+                                {
+                                    string[] User = poolUser.Split('\\');
+                                    search.Filter = "(sAMAccountName=" + User[1] + ")";
+                                }
+                                else
+                                {
+                                    search.Filter = "(sAMAccountName=" + poolUser + "$)";
+                                }
+                                search.PropertiesToLoad.Add("displayName");
+                                search.PropertiesToLoad.Add("userAccountControl");
+
+                                SearchResult result_dc = search.FindOne();
+                                if (result_dc != null)
+                                {
+                                    DirectoryEntry entry = result_dc.GetDirectoryEntry();
+
+                                    int userAccountControlFlags = (int)entry.Properties["userAccountControl"].Value;
+
+                                    object[] arr = (object[])entry.Properties["msDS-AllowedToDelegateTo"].Value;
+
+                                    if ((userAccountControlFlags & (int)UserAccountControl.TRUSTED_FOR_DELEGATION) == (int)UserAccountControl.TRUSTED_FOR_DELEGATION)
+                                    {
+                                        textBox1.Text += "This user is trusted for delegation to any service(Kerberos only)..\r\n";
+                                        isDelegationSet = true;
+                                        isConstrainedDelegationSet = false;
+                                    }
+                                    else if (arr != null)
+                                    {
+
+                                        textBox1.Text += "This user is trusted for delegation to specified services only..\r\n";
+                                        Thread.Sleep(100);
+                                        System.Windows.Forms.Application.DoEvents();
+
+                                        if ((userAccountControlFlags & (int)UserAccountControl.TRUSTED_TO_AUTH_FOR_DELEGATION) == (int)UserAccountControl.TRUSTED_TO_AUTH_FOR_DELEGATION)
+                                        {
+                                            textBox1.Text += "\r\n'Use any authentication protocol' is set..\r\n";
+                                        }
+
+                                        else
+                                        {
+                                            textBox1.Text += "\r\n'Use Kerberos only' is set..\r\n";
+                                        }
+                                        Thread.Sleep(100);
+                                        System.Windows.Forms.Application.DoEvents();
+
+                                        textBox1.Text += "\r\nServices to which this account can present delegated credentials:\r\n\r\n";
+                                        Thread.Sleep(100);
+                                        System.Windows.Forms.Application.DoEvents();
+
+                                        foreach (object o in arr)
+                                        {
+                                            textBox1.Text += o + "\r\n";
+                                            Thread.Sleep(100);
+                                            System.Windows.Forms.Application.DoEvents();
+                                        }
+
+                                        isDelegationSet = true;
+                                        isConstrainedDelegationSet = true;
+                                    }
+                                    else
+                                    {
+                                        textBox1.Text += "This user is not trusted for delegation..\r\n";
+                                        Thread.Sleep(100);
+                                        System.Windows.Forms.Application.DoEvents();
+
+                                        isDelegationSet = false;
+                                        isConstrainedDelegationSet = false;
+                                    }
+
+                                }
+                            }
+
+                            textBox1.Text += "==================================================\r\n";
+                            Thread.Sleep(100);
+                            System.Windows.Forms.Application.DoEvents();
+                        }
+                    }
+                    catch (Exception e2)
+                    {
+                        textBox1.Text += "\r\nError\r\n=======\r\n" + e2 + "\r\n\r\n";
+                        MessageBox.Show("" + e2, "Fatal Error!");
+                    }
+
+                    progressBar1.Value = 80;
 
                     DialogResult result1 = MessageBox.Show("Are you using hostname for the website?", "Alert!", MessageBoxButtons.YesNo);
 
@@ -593,6 +769,8 @@ namespace KerberosConfigMgr
                         Thread.Sleep(100);
                         System.Windows.Forms.Application.DoEvents();
 
+                        progressBar1.Value = 90;
+
                         if (isUsingPoolIdentity == true)
                         {
                             try
@@ -643,9 +821,50 @@ namespace KerberosConfigMgr
 
                     }
 
-                    progressBar1.Value = 80;
-                    textBox1.Text += "\r\nYou can Generate cmdlet by clicking the below button to set SPNs on DC\r\n";
+                    progressBar1.Value = 95;
+
+                    //bool isDelegationSetConf = false;
+                    //bool isConstrainedDelegationSetConf = false;
+
+                    textBox1.Text += "\r\nRequired Delegation Settings\r\n";
+                    textBox1.Text += "====================================================\r\n";
+                    Thread.Sleep(100);
+                    System.Windows.Forms.Application.DoEvents();
+
+                    if (isDelegationSet == true)
+                    {
+                        if (isConstrainedDelegationSet == true)
+                            textBox1.Text += "Delegation is already set but you need to verify the services!\r\n";
+                        else
+                            textBox1.Text += "Delegation is already set!\r\n";
+                    }
+                    else
+                    {
+                        textBox1.Text += "Delegation is not set.\r\nWe need to configure Either Constrained or Unconstrained Delegation.\r\n";
+                    }
+                    Thread.Sleep(100);
+                    System.Windows.Forms.Application.DoEvents();
+
                     textBox1.Text += "=====================================================\r\n";
+                    Thread.Sleep(100);
+                    System.Windows.Forms.Application.DoEvents();
+
+                    textBox1.Text += "\r\n==>You can Generate cmdlet and powershell script to set SPNs and configure delegation for the application pool user on DC\r\n";
+                    Thread.Sleep(100);
+                    System.Windows.Forms.Application.DoEvents();
+
+                    textBox1.Text += "==>Note that the powershell script which gets generated will only configure Unconstrained Delegation.\r\n";
+                    Thread.Sleep(100);
+                    System.Windows.Forms.Application.DoEvents();
+
+                    textBox1.Text += "==>Click the below button to save the files to current directory.\r\n";
+                    Thread.Sleep(100);
+                    System.Windows.Forms.Application.DoEvents();
+
+                    textBox1.Text += "=====================================================\r\n";
+                    Thread.Sleep(100);
+                    System.Windows.Forms.Application.DoEvents();
+
                     button4.Enabled = true;
                     Thread.Sleep(100);
                     System.Windows.Forms.Application.DoEvents();
@@ -664,7 +883,14 @@ namespace KerberosConfigMgr
                 }
             }
 
-            
+            else
+            {
+                button1.Enabled = true;
+                radioButton1.Enabled = true;
+                radioButton2.Enabled = true;
+                return;
+            }
+
         }
 
         private void InputBox()
@@ -711,6 +937,7 @@ namespace KerberosConfigMgr
             return SPNs;
         }
 
+
         private static ConfigurationElement FindElement(ConfigurationElementCollection collection, string elementTagName, params string[] keyValues)
         {
             foreach (ConfigurationElement element in collection)
@@ -754,6 +981,8 @@ namespace KerberosConfigMgr
             button2.Enabled = true;
             button1.Enabled = false;
             button3.Enabled = false;
+            radioButton1.Enabled = true;
+            radioButton2.Enabled = true;
             //comboBox2.Enabled = false;
         }
 
@@ -764,6 +993,9 @@ namespace KerberosConfigMgr
             ToolTip1.SetToolTip(this.button1, "Configures Kerberos for the selected site.");
             ToolTip1.SetToolTip(this.button3, "Reverts all the changes which were made in previous click for the selected site.");
             ToolTip1.SetToolTip(this.button4, "Generates the script for setting up SPNs required for the selected site to make kerberos work.");
+            ToolTip1.SetToolTip(this.radioButton1, "Reviews/Configures the Kerberos Single Hop Authentication.");
+            ToolTip1.SetToolTip(this.radioButton2, "Reviews/Configures the Kerberos Double Hop Authentication(Pass Through Authentication).");
+            ToolTip1.SetToolTip(this.comboBox2, "You can select the website/Web application of your choice for review/configuring Kerberos.");
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -771,6 +1003,11 @@ namespace KerberosConfigMgr
             if (File.Exists("spn.cmd"))
             {
                 File.Delete("spn.cmd");
+            }
+
+            if(File.Exists("delegation.ps1"))
+            {
+                File.Delete("delegation.ps1");
             }
 
             using (StreamWriter fs = File.CreateText("spn.cmd"))
@@ -782,15 +1019,30 @@ namespace KerberosConfigMgr
 
                 fs.Close();
             }
+
+            using (StreamWriter fs = File.CreateText("delegation.ps1"))
+            {
+                
+
+                fs.WriteLine("Import-Module ActiveDirectory");
+                if(isUsingCustomAppPoolDelegation == true)
+                    fs.WriteLine("Set-ADAccountControl -Identity '" + UserGlobalDeleg + "' -TrustedForDelegation $true");
+                else
+                    fs.WriteLine("Set-ADAccountControl -Identity '" + UserGlobalDeleg + "$' -TrustedForDelegation $true");
+                fs.Close();
+            }
             spnValue.Clear();
-            MessageBox.Show("Script Generated and saved to current directory!", "Success!");
+            MessageBox.Show("Scripts Generated and Saved to current directory for adding SPNs and Configuring Delegation!", "Success!");
             button4.Enabled = false;
         }
         string app1;
         string selectedSite1;
         private void button2_Click(object sender, EventArgs e)
         {
-            DialogResult result = MessageBox.Show("Do you want to Review the current settings for this website?", "Alert!", MessageBoxButtons.YesNo);
+            radioButton1.Enabled = false;
+            radioButton2.Enabled = false;
+            button2.Enabled = false;
+            DialogResult result = MessageBox.Show("Do you want to review the current settings for this website?", "Alert!", MessageBoxButtons.YesNo);
             if (result.ToString().Equals("Yes"))
             {
                 button4.Enabled = false;
@@ -808,7 +1060,27 @@ namespace KerberosConfigMgr
                 {
                     bool isAnApplication = false;
 
-                    textBox1.Text = "Review\r\n===================\r\n\r\n";
+                    //<summary>
+                    //To check if user wants to query DC for delegation settings
+                    //based on this one more function is written for delegation query
+                    //</summary>
+
+                    bool DelegationQuery = false;
+
+                    if (radioButton2.Checked == true)
+                    {
+                        DelegationQuery = true;
+                    }
+                    else if(radioButton1.Checked == true)
+                    {
+                        DelegationQuery = false;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Please select one of the Radio buttons for Single Hop or Pass Through Authentication!", "Alert!");
+                        return;
+                    }
+                    textBox1.Text = "Review\r\n===================\r\n";
                     Thread.Sleep(100);
                     System.Windows.Forms.Application.DoEvents();
 
@@ -887,13 +1159,26 @@ namespace KerberosConfigMgr
 
                     Configuration config1 = serverMgr.GetWebConfiguration(selectedSite);
                     ConfigurationSection identitySection = config1.GetSection("system.web/identity");
-
                     bool aspnetimpersonation = (bool)identitySection["impersonate"];
 
-                    if (aspnetimpersonation == true)
-                        textBox1.Text += "ASP.NET Impersonation is enabled...(NOT RECOMMENDED)\r\n";
+                    //<summary>
+                    //Validating ASP.NET Impersonation settings
+                    //</summary>
+
+                    if (DelegationQuery == false)
+                    {
+                        if (aspnetimpersonation == true)
+                            textBox1.Text += "ASP.NET Impersonation is enabled...(NOT RECOMMENDED)\r\n";
+                        else
+                            textBox1.Text += "ASP.NET Impersonation is disabled...(RECOMMENDED)\r\n";
+                    }
                     else
-                        textBox1.Text += "ASP.NET Impersonation is disabled...(RECOMMENDED)\r\n";
+                    {
+                        if (aspnetimpersonation == true)
+                            textBox1.Text += "ASP.NET Impersonation is enabled...(RECOMMENDED)\r\n";
+                        else
+                            textBox1.Text += "ASP.NET Impersonation is disabled...(NOT RECOMMENDED)\r\n";
+                    }
 
                     Thread.Sleep(100);
                     System.Windows.Forms.Application.DoEvents();
@@ -934,11 +1219,11 @@ namespace KerberosConfigMgr
 
                     ApplicationPool pool = serverMgr.ApplicationPools[getPool];
                     String poolIdentity = pool.ProcessModel.IdentityType.ToString();
-
+                    String poolUser;
                     if (poolIdentity == "SpecificUser")
                     {
                         isUsingPoolIdentity = true;
-                        UName = pool.ProcessModel.UserName;
+                        UName = poolUser = pool.ProcessModel.UserName;
                         textBox1.Text += "You are using a custom identity : " + UName + "...\r\n";
                         textBox1.Text += "We should have useAppPoolCredentials set to true...\r\n";
                         Thread.Sleep(100);
@@ -947,6 +1232,7 @@ namespace KerberosConfigMgr
                     else
                     {
                         isUsingPoolIdentity = false;
+                        poolUser = System.Environment.GetEnvironmentVariable("COMPUTERNAME");
                         textBox1.Text += "You are using a builtin account : " + poolIdentity + "..\r\n";
                         textBox1.Text += "We should have useAppPoolCredentials set to false and useKernelMode set to true...\r\n";
                         Thread.Sleep(100);
@@ -965,9 +1251,9 @@ namespace KerberosConfigMgr
 
                         bool useKernel = (bool)windowsAuthenticationSection["useKernelMode"];
                         if (useKernel == true)
-                            textBox1.Text += "useKernelMode set to true..\r\n";
+                            textBox1.Text += "useKernelMode set to true..(RECOMMENDED)\r\n";
                         else
-                            textBox1.Text += "useKernelMode set to false..\r\n";
+                            textBox1.Text += "useKernelMode set to false..(NOT RECOMMENDED)\r\n";
                         Thread.Sleep(100);
                         System.Windows.Forms.Application.DoEvents();
                     }
@@ -990,126 +1276,245 @@ namespace KerberosConfigMgr
                         System.Windows.Forms.Application.DoEvents();
                     }
 
-                    textBox1.Text += "Fetching SPNs for the account set for Application pool identity..\r\n";
+                    textBox1.Text += "==================================================\r\n";
                     Thread.Sleep(100);
                     System.Windows.Forms.Application.DoEvents();
-                    if (isUsingPoolIdentity == true)
+
+                    //<summary>
+                    //Adding the condition to check if user wants to see the available SPNs
+                    //This will query the DC for SPNs
+                    //<summary>
+
+                    DialogResult QuerySPNDialogueReview = MessageBox.Show("Are you sure you want to fetch the available SPNs for the service?", "Alert!", MessageBoxButtons.YesNo);
+                    if (QuerySPNDialogueReview.ToString().Equals("Yes"))
                     {
-                        isAppPoolSetGlobal = isUsingPoolIdentity;
-                        bool isSetSPNsSmall = false;
-                        UName = pool.ProcessModel.UserName;
-                        bool isSetSPNsCaps = false;
-                        textBox1.Text += "\r\nBelow are the SPNs set for the Custom account: " + UName + "\r\n";
+                        textBox1.Text += "\r\nFetching SPNs for the account set for Application pool identity..\r\n";
                         Thread.Sleep(100);
                         System.Windows.Forms.Application.DoEvents();
-                        textBox1.Text += "==================================================\r\n";
-                        Thread.Sleep(100);
-                        System.Windows.Forms.Application.DoEvents();
-                        UName = pool.ProcessModel.UserName;
-                        UserGlobal = UName;
-                        string[] split = UName.Split('\\');
-                        foreach (string value in ListSPN("HTTP", split[1]))
+                        if (isUsingPoolIdentity == true)
                         {
-                            if (value != null)
+                            isAppPoolSetGlobal = isUsingPoolIdentity;
+                            bool isSetSPNsSmall = false;
+                            UName = pool.ProcessModel.UserName;
+                            bool isSetSPNsCaps = false;
+                            textBox1.Text += "\r\nBelow are the SPNs set for the Custom account: " + UName + "\r\n";
+                            Thread.Sleep(100);
+                            System.Windows.Forms.Application.DoEvents();
+                            textBox1.Text += "==================================================\r\n";
+                            Thread.Sleep(100);
+                            System.Windows.Forms.Application.DoEvents();
+                            UName = pool.ProcessModel.UserName;
+                            UserGlobal = UName;
+                            string[] split = UName.Split('\\');
+                            foreach (string value in ListSPN("HTTP", split[1]))
                             {
-                                textBox1.Text += value + "\r\n";
+                                if (value != null)
+                                {
+                                    textBox1.Text += value + "\r\n";
+                                    Thread.Sleep(100);
+                                    System.Windows.Forms.Application.DoEvents();
+                                    isSetSPNsSmall = true;
+                                }
+                                else
+                                {
+                                    isSetSPNsSmall = false;
+                                }
+
+                            }
+
+                            foreach (string value in ListSPN("http", split[1]))
+                            {
+                                if (value != null)
+                                {
+                                    textBox1.Text += value + "\r\n";
+                                    Thread.Sleep(100);
+                                    System.Windows.Forms.Application.DoEvents();
+                                    isSetSPNsCaps = true;
+                                }
+                                else
+                                {
+                                    isSetSPNsCaps = false;
+                                }
+
+                            }
+
+                            if (isSetSPNsCaps == false && isSetSPNsSmall == false)
+                            {
+                                textBox1.Text += "No SPNs set for this account\r\n";
                                 Thread.Sleep(100);
                                 System.Windows.Forms.Application.DoEvents();
-                                isSetSPNsSmall = true;
-                            }
-                            else
-                            {
-                                isSetSPNsSmall = false;
                             }
 
-                        }
-
-                        foreach (string value in ListSPN("http", split[1]))
-                        {
-                            if (value != null)
-                            {
-                                textBox1.Text += value + "\r\n";
-                                Thread.Sleep(100);
-                                System.Windows.Forms.Application.DoEvents();
-                                isSetSPNsCaps = true;
-                            }
-                            else
-                            {
-                                isSetSPNsCaps = false;
-                            }
-
-                        }
-
-                        if (isSetSPNsCaps == false && isSetSPNsSmall == false)
-                        {
-                            textBox1.Text += "No SPNs set for this account\r\n";
+                            textBox1.Text += "==================================================\r\n";
                             Thread.Sleep(100);
                             System.Windows.Forms.Application.DoEvents();
                         }
 
-                        textBox1.Text += "==================================================\r\n";
-                        Thread.Sleep(100);
-                        System.Windows.Forms.Application.DoEvents();
-                    }
-
-                    else
-                    {
-                        bool isSetSPNsSmall = false;
-                        bool isSetSPNsCaps = false;
-                        string computerName = System.Environment.GetEnvironmentVariable("COMPUTERNAME");
-                        isAppPoolSetGlobal = false;
-                        UserGlobal = computerName;
-                        textBox1.Text += "\r\nBelow are the SPNs set for the " + computerName + " account:\r\n";
-                        Thread.Sleep(100);
-                        System.Windows.Forms.Application.DoEvents();
-                        textBox1.Text += "==================================================\r\n";
-                        Thread.Sleep(100);
-                        System.Windows.Forms.Application.DoEvents();
-                        foreach (string value in ListSPN("HOST", computerName))
+                        else
                         {
-                            if (value != null)
+                            bool isSetSPNsSmall = false;
+                            bool isSetSPNsCaps = false;
+                            string computerName = System.Environment.GetEnvironmentVariable("COMPUTERNAME");
+                            isAppPoolSetGlobal = false;
+                            UserGlobal = computerName;
+                            textBox1.Text += "\r\nBelow are the SPNs set for the " + computerName + " account:\r\n";
+                            Thread.Sleep(100);
+                            System.Windows.Forms.Application.DoEvents();
+                            textBox1.Text += "==================================================\r\n";
+                            Thread.Sleep(100);
+                            System.Windows.Forms.Application.DoEvents();
+                            foreach (string value in ListSPN("HOST", computerName))
                             {
-                                textBox1.Text += value + "\r\n";
+                                if (value != null)
+                                {
+                                    textBox1.Text += value + "\r\n";
+                                    Thread.Sleep(100);
+                                    System.Windows.Forms.Application.DoEvents();
+                                    isSetSPNsSmall = true;
+                                }
+                                else
+                                {
+                                    isSetSPNsSmall = false;
+                                }
+
+                            }
+
+                            foreach (string value in ListSPN("host", computerName))
+                            {
+                                if (value != null)
+                                {
+                                    textBox1.Text += value + "\r\n";
+                                    Thread.Sleep(100);
+                                    System.Windows.Forms.Application.DoEvents();
+                                    isSetSPNsCaps = true;
+                                }
+                                else
+                                    isSetSPNsCaps = false;
+                            }
+
+                            if (isSetSPNsCaps == false && isSetSPNsSmall == false)
+                            {
+                                textBox1.Text += "No SPNs set for this account\r\n";
                                 Thread.Sleep(100);
                                 System.Windows.Forms.Application.DoEvents();
-                                isSetSPNsSmall = true;
-                            }
-                            else
-                            {
-                                isSetSPNsSmall = false;
                             }
 
-                        }
-
-                        foreach (string value in ListSPN("host", computerName))
-                        {
-                            if (value != null)
-                            {
-                                textBox1.Text += value + "\r\n";
-                                Thread.Sleep(100);
-                                System.Windows.Forms.Application.DoEvents();
-                                isSetSPNsCaps = true;
-                            }
-                            else
-                                isSetSPNsCaps = false;
-                        }
-
-                        if (isSetSPNsCaps == false && isSetSPNsSmall == false)
-                        {
-                            textBox1.Text += "No SPNs set for this account\r\n";
+                            textBox1.Text += "==================================================\r\n";
                             Thread.Sleep(100);
                             System.Windows.Forms.Application.DoEvents();
                         }
-
-                        textBox1.Text += "==================================================\r\n";
-                        Thread.Sleep(100);
-                        System.Windows.Forms.Application.DoEvents();
                     }
 
                     progressBar1.Value = 70;
 
-                    DialogResult result1 = MessageBox.Show("Are you using hostname for the website?", "Alert!", MessageBoxButtons.YesNo);
+                    //<summary>
+                    //Query Domain controller for Delegation settings for the application pool credentials (machine account or custom account)
+                    //</summary>
 
+                    bool isDelegationSet = false;
+                    bool isConstrainedDelegationSet = false;
+                    try
+                    {
+                        if (DelegationQuery == true)
+                        {
+                            textBox1.Text += "\r\nDelegation Settings:\r\n";
+                            textBox1.Text += "==================================================\r\n";
+                            Thread.Sleep(100);
+                            System.Windows.Forms.Application.DoEvents();
+                            using (Domain domain = Domain.GetCurrentDomain())
+                            {
+                                DirectoryEntry ouDn = new DirectoryEntry();
+                                DirectorySearcher search = new DirectorySearcher(ouDn);
+                                if (isUsingPoolIdentity == true)
+                                {
+                                    string[] User = poolUser.Split('\\');
+                                    search.Filter = "(sAMAccountName=" + User[1] + ")";
+                                }
+                                else
+                                {
+                                    search.Filter = "(sAMAccountName=" + poolUser + "$)";
+                                }
+                                search.PropertiesToLoad.Add("displayName");
+                                search.PropertiesToLoad.Add("userAccountControl");
+
+                                SearchResult result_dc = search.FindOne();
+                                if (result_dc != null)
+                                {
+                                    DirectoryEntry entry = result_dc.GetDirectoryEntry();
+
+                                    int userAccountControlFlags = (int)entry.Properties["userAccountControl"].Value;
+
+                                    object[] arr = (object[])entry.Properties["msDS-AllowedToDelegateTo"].Value;
+
+                                    if ((userAccountControlFlags & (int)UserAccountControl.TRUSTED_FOR_DELEGATION) == (int)UserAccountControl.TRUSTED_FOR_DELEGATION)
+                                    {
+                                        textBox1.Text += "This user is trusted for delegation to any service(Kerberos only)..\r\n";
+                                        isDelegationSet = true;
+                                        isConstrainedDelegationSet = false;
+                                    }
+                                    else if (arr != null)
+                                    {
+
+                                        textBox1.Text += "This user is trusted for delegation to specified services only..\r\n";
+                                        Thread.Sleep(100);
+                                        System.Windows.Forms.Application.DoEvents();
+
+                                        if ((userAccountControlFlags & (int)UserAccountControl.TRUSTED_TO_AUTH_FOR_DELEGATION) == (int)UserAccountControl.TRUSTED_TO_AUTH_FOR_DELEGATION)
+                                        {
+                                            textBox1.Text += "\r\n'Use any authentication protocol' is set..\r\n";
+                                        }
+
+                                        else
+                                        {
+                                            textBox1.Text += "\r\n'Use Kerberos only' is set..\r\n";
+                                        }
+                                        Thread.Sleep(100);
+                                        System.Windows.Forms.Application.DoEvents();
+
+                                        textBox1.Text += "\r\nServices to which this account can present delegated credentials:\r\n\r\n";
+                                        Thread.Sleep(100);
+                                        System.Windows.Forms.Application.DoEvents();
+
+                                        foreach (object o in arr)
+                                        {
+                                            textBox1.Text += o + "\r\n";
+                                            Thread.Sleep(100);
+                                            System.Windows.Forms.Application.DoEvents();
+                                        }
+
+                                        isDelegationSet = true;
+                                        isConstrainedDelegationSet = true;
+                                    }
+                                    else
+                                    {
+                                        textBox1.Text += "This user is not trusted for delegation..\r\n";
+                                        Thread.Sleep(100);
+                                        System.Windows.Forms.Application.DoEvents();
+                                        isDelegationSet = false;
+                                        isConstrainedDelegationSet = false;
+                                    }
+
+                                }
+                            }
+
+                            textBox1.Text += "==================================================\r\n";
+                            Thread.Sleep(100);
+                            System.Windows.Forms.Application.DoEvents();
+                        }
+                    }
+                    catch(Exception e2)
+                    {
+                        textBox1.Text += "\r\nError\r\n=======\r\n" + e2 + "\r\n\r\n";
+                        MessageBox.Show("" + e2, "Fatal Error!");
+                    }
+
+                    progressBar1.Value = 80;
+
+                    //<summary>
+                    //Display required SPNs
+                    //</summary>
+                    DialogResult result1 = MessageBox.Show("Are you using hostname for the website?", "Alert!", MessageBoxButtons.YesNo);
+                    
                     Label: if (result1.ToString().Equals("Yes"))
                     {
                         string customHostName = "";
@@ -1128,6 +1533,8 @@ namespace KerberosConfigMgr
                         textBox1.Text += "\r\nThe hostname you entered is : " + customHostName + "\r\n";
                         Thread.Sleep(100);
                         System.Windows.Forms.Application.DoEvents();
+
+                        progressBar1.Value = 90;
 
                         textBox1.Text += "\r\nSPNs needed for kerberos to work:\r\n";
                         Thread.Sleep(100);
@@ -1238,7 +1645,27 @@ namespace KerberosConfigMgr
 
                         }
                     }
-                    progressBar1.Value = 80;
+
+                    progressBar1.Value = 95;
+
+                    textBox1.Text += "\r\nRequired Delegation Settings\r\n";
+                    textBox1.Text += "====================================================\r\n";
+                    Thread.Sleep(100);
+                    System.Windows.Forms.Application.DoEvents();
+
+                    if (isDelegationSet == true)
+                    {
+                        if (isConstrainedDelegationSet == true)
+                            textBox1.Text += "Delegation is already set but you need to verify the services!\r\n";
+                        else
+                            textBox1.Text += "Delegation is already set!\r\n";
+                    }
+                    else
+                    {
+                        textBox1.Text += "Delegation is not set.\r\nWe need to configure Either Constrained or Unconstrained Delegation.\r\n";
+                    }
+                    textBox1.Text += "====================================================\r\n";
+
                     progressBar1.Value = 100;
                     serverMgr.CommitChanges();
                     button2.Enabled = false;
@@ -1249,17 +1676,30 @@ namespace KerberosConfigMgr
                     w.WriteLine(textBox1.Text);
                     w.Close();
                     MessageBox.Show(text: "Review for the selected website completed successfully!", caption: "Success!");
+                    radioButton1.Enabled = true;
+                    radioButton2.Enabled = true;
                 }
             }
+
+            else
+            {
+                button2.Enabled = true;
+                radioButton1.Enabled = true;
+                radioButton2.Enabled = true;
+                return;
+            }
+
+            
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            DialogResult result = MessageBox.Show("Are you sure you want to Revert the changes for this website?", "Alert!", MessageBoxButtons.YesNo);
+            button3.Enabled = false;
+            DialogResult result = MessageBox.Show("Are you sure you want to revert the changes for this website?", "Alert!", MessageBoxButtons.YesNo);
             if (result.ToString().Equals("Yes"))
             {
                 button4.Enabled = false;
-                textBox1.Text = "Reverting changes\r\n======================\r\n\r\n";
+                textBox1.Text = "Reverting changes\r\n======================\r\n";
                 var serverMgr = new ServerManager();
                 Configuration config = serverMgr.GetApplicationHostConfiguration();
                 string selectedSite = this.comboBox2.GetItemText(this.comboBox2.SelectedItem);
@@ -1453,11 +1893,17 @@ namespace KerberosConfigMgr
 
                 if (isUseAppPoolChanged == true)
                 {
-
                     textBox1.Text += "Reverting useAppPoolCredentials...\r\n";
                     Thread.Sleep(100);
                     System.Windows.Forms.Application.DoEvents();
-                    windowsAuthenticationSection["useAppPoolCredentials"] = false;
+
+                    bool useAppPool = (bool)windowsAuthenticationSection["useAppPoolCredentials"];
+
+                    if (useAppPool == true)
+                        windowsAuthenticationSection["useAppPoolCredentials"] = false;
+                    else
+                        windowsAuthenticationSection["useAppPoolCredentials"] = true;
+
                     textBox1.Text += "Reverted useAppPoolCredentials...\r\n";
                     Thread.Sleep(100);
                     System.Windows.Forms.Application.DoEvents();
@@ -1475,7 +1921,13 @@ namespace KerberosConfigMgr
                     textBox1.Text += "Reverting useKernelMode...\r\n";
                     Thread.Sleep(100);
                     System.Windows.Forms.Application.DoEvents();
-                    windowsAuthenticationSection["useKernelMode"] = false;
+                    bool useKernel = (bool)windowsAuthenticationSection["useKernelMode"];
+
+                    if (useKernel == true)
+                        windowsAuthenticationSection["useKernelMode"] = false;
+                    else
+                        windowsAuthenticationSection["useKernelMode"] = true;
+
                     textBox1.Text += "Reverted userKernelMode...\r\n";
                     Thread.Sleep(100);
                     System.Windows.Forms.Application.DoEvents();
@@ -1487,7 +1939,7 @@ namespace KerberosConfigMgr
                     System.Windows.Forms.Application.DoEvents();
                 }
 
-                textBox1.Text += "\r\n=======================================\r\n";
+                textBox1.Text += "=======================================\r\n";
 
                 button3.Enabled = false;
                 serverMgr.CommitChanges();
@@ -1499,6 +1951,22 @@ namespace KerberosConfigMgr
                 w.Close();
                 MessageBox.Show("All the settings have been reverted successfully!", "Success!");
             }
+            else
+            {
+                button3.Enabled = true;
+                return;
+            }
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            textBox1.SelectionStart = textBox1.Text.Length;
+            textBox1.ScrollToCaret();
+        }
+
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 
