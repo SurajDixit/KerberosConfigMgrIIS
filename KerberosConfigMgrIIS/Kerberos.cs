@@ -1738,267 +1738,275 @@ namespace KerberosConfigMgr
 
         private void button3_Click(object sender, EventArgs e)
         {
-            button3.Enabled = false;
-            DialogResult result = MessageBox.Show("Are you sure you want to revert the changes for this website?", "Alert!", MessageBoxButtons.YesNo);
-            if (result.ToString().Equals("Yes"))
+            try
             {
-                button4.Enabled = false;
-                textBox1.Text = "Reverting changes\r\n======================\r\n";
-                var serverMgr = new ServerManager();
-                Configuration config = serverMgr.GetApplicationHostConfiguration();
-                string selectedSite = this.comboBox2.GetItemText(this.comboBox2.SelectedItem);
-                textBox1.Text += "Selected Site : " + selectedSite + "\r\n";
-                Thread.Sleep(100);
-                System.Windows.Forms.Application.DoEvents();
-                if (isAnonymousChanged == true)
-                {
-                    ConfigurationSection anonymousAuthenticationSection = config.GetSection("system.webServer/security/authentication/anonymousAuthentication", selectedSite);
-                    bool anonymous = (bool)anonymousAuthenticationSection["enabled"];
-                    if (anonymous == false)
-                    {
-                        textBox1.Text += "Reverting Anonymous auth...\r\n";
-                        Thread.Sleep(100);
-                        System.Windows.Forms.Application.DoEvents();
-                        anonymousAuthenticationSection["enabled"] = true;
-                        textBox1.Text += "Anonymous authentication reverted...\r\n";
-                        Thread.Sleep(100);
-                        System.Windows.Forms.Application.DoEvents();
-                    }
-                    else
-                    {
-                        textBox1.Text += "Reverting Anonymous auth...\r\n";
-                        Thread.Sleep(100);
-                        System.Windows.Forms.Application.DoEvents();
-                        anonymousAuthenticationSection["enabled"] = false;
-                        textBox1.Text += "Anonymous authentication reverted...\r\n";
-                        Thread.Sleep(100);
-                        System.Windows.Forms.Application.DoEvents();
-                    }
-                }
-                else
-                {
-                    textBox1.Text += "Did not revert Anonymous authentication as it was not changed...\r\n";
-                    Thread.Sleep(100);
-                    System.Windows.Forms.Application.DoEvents();
-                }
-
-                if (isBasicChanged == true)
-                {
-                    ConfigurationSection basicAuthenticationSection = config.GetSection("system.webServer/security/authentication/basicAuthentication", selectedSite);
-                    bool basic = (bool)basicAuthenticationSection["enabled"];
-                    if (basic == false)
-                    {
-                        textBox1.Text += "Reverting basic auth...\r\n";
-                        Thread.Sleep(100);
-                        System.Windows.Forms.Application.DoEvents();
-                        basicAuthenticationSection["enabled"] = true;
-                        textBox1.Text += "Basic authentication reverted...\r\n";
-                        Thread.Sleep(100);
-                        System.Windows.Forms.Application.DoEvents();
-                    }
-                    else
-                    {
-                        textBox1.Text += "Reverting Basic auth...\r\n";
-                        Thread.Sleep(100);
-                        System.Windows.Forms.Application.DoEvents();
-                        basicAuthenticationSection["enabled"] = false;
-                        textBox1.Text += "Basic authentication reverted...\r\n";
-                        Thread.Sleep(100);
-                        System.Windows.Forms.Application.DoEvents();
-                    }
-                }
-                else
-                {
-                    textBox1.Text += "Did not revert Basic authentication as it was not changed...\r\n";
-                    Thread.Sleep(100);
-                    System.Windows.Forms.Application.DoEvents();
-                }
-
-                if (isDigestChanged == true)
-                {
-                    ConfigurationSection digestAuthenticationSection = config.GetSection("system.webServer/security/authentication/digestAuthentication", selectedSite);
-                    bool digest = (bool)digestAuthenticationSection["enabled"];
-                    if (digest == false)
-                    {
-                        textBox1.Text += "Reverting digest auth...\r\n";
-                        Thread.Sleep(100);
-                        System.Windows.Forms.Application.DoEvents();
-                        digestAuthenticationSection["enabled"] = true;
-                        textBox1.Text += "digest authentication reverted...\r\n";
-                        Thread.Sleep(100);
-                        System.Windows.Forms.Application.DoEvents();
-                    }
-                    else
-                    {
-                        textBox1.Text += "Reverting digest auth...\r\n";
-                        Thread.Sleep(100);
-                        System.Windows.Forms.Application.DoEvents();
-                        digestAuthenticationSection["enabled"] = false;
-                        textBox1.Text += "digest authentication reverted...\r\n";
-                        Thread.Sleep(100);
-                        System.Windows.Forms.Application.DoEvents();
-                    }
-                }
-                else
-                {
-                    textBox1.Text += "Did not revert digest authentication as it was not changed...\r\n";
-                    Thread.Sleep(100);
-                    System.Windows.Forms.Application.DoEvents();
-                }
-
-                if (isAspnetImpersonationChanged == true)
-                {
-                    Configuration config1 = serverMgr.GetWebConfiguration(selectedSite);
-                    ConfigurationSection identitySection = config1.GetSection("system.web/identity");
-                    bool aspnetimpersonation = (bool)identitySection["impersonate"];
-                    if (aspnetimpersonation == false)
-                    {
-                        textBox1.Text += "Reverting aspnetimpersonation...\r\n";
-                        Thread.Sleep(100);
-                        System.Windows.Forms.Application.DoEvents();
-                        identitySection["impersonate"] = true;
-                        textBox1.Text += "aspnetimpersonation reverted...\r\n";
-                        Thread.Sleep(100);
-                        System.Windows.Forms.Application.DoEvents();
-                    }
-                    else
-                    {
-                        textBox1.Text += "Reverting aspnetimpersonation...\r\n";
-                        Thread.Sleep(100);
-                        System.Windows.Forms.Application.DoEvents();
-                        identitySection["impersonate"] = false;
-                        textBox1.Text += "aspnetimpersonation reverted...\r\n";
-                        Thread.Sleep(100);
-                        System.Windows.Forms.Application.DoEvents();
-                    }
-                }
-                else
-                {
-                    textBox1.Text += "Did not revert aspnetimpersonation as it was not changed...\r\n";
-                    Thread.Sleep(100);
-                    System.Windows.Forms.Application.DoEvents();
-                }
-
-                ConfigurationSection windowsAuthenticationSection = config.GetSection("system.webServer/security/authentication/windowsAuthentication", selectedSite);
-
-                if (isWindowsChanged == true)
-                {
-
-                    bool windows = (bool)windowsAuthenticationSection["enabled"];
-                    if (windows == false)
-                    {
-                        textBox1.Text += "Reverting windows auth...\r\n";
-                        Thread.Sleep(100);
-                        System.Windows.Forms.Application.DoEvents();
-                        windowsAuthenticationSection["enabled"] = true;
-                        textBox1.Text += "windows auth reverted...\r\n";
-                        Thread.Sleep(100);
-                        System.Windows.Forms.Application.DoEvents();
-                    }
-                    else
-                    {
-                        textBox1.Text += "Reverting windows auth...\r\n";
-                        Thread.Sleep(100);
-                        System.Windows.Forms.Application.DoEvents();
-                        windowsAuthenticationSection["enabled"] = false;
-                        textBox1.Text += "Windows auth reverted...\r\n";
-                        Thread.Sleep(100);
-                        System.Windows.Forms.Application.DoEvents();
-                    }
-                }
-                else
-                {
-                    textBox1.Text += "Did not revert Windows auth as it was not changed...\r\n";
-                    Thread.Sleep(100);
-                    System.Windows.Forms.Application.DoEvents();
-                }
-
-                if (isNegotiateChanged == true)
-                {
-
-                    ConfigurationElementCollection providersCollection = windowsAuthenticationSection.GetCollection("providers");
-                    ConfigurationElement searchNegotiate = FindElement(providersCollection, "add", "value", @"Negotiate");
-                    ConfigurationElement searchOnPriority = FindElement(providersCollection, "add", "value", onPriority);
-                    textBox1.Text += "Reverting Providers...\r\n";
-                    Thread.Sleep(100);
-                    System.Windows.Forms.Application.DoEvents();
-                    searchNegotiate["value"] = onPriority;
-                    searchOnPriority["value"] = "Negotiate";
-                    textBox1.Text += "Reverted Providers...\r\n";
-                    Thread.Sleep(100);
-                    System.Windows.Forms.Application.DoEvents();
-                }
-                else
-                {
-                    textBox1.Text += "Did not revert Providers as it was not changed...\r\n";
-                    Thread.Sleep(100);
-                    System.Windows.Forms.Application.DoEvents();
-                }
-
-                if (isUseAppPoolChanged == true)
-                {
-                    textBox1.Text += "Reverting useAppPoolCredentials...\r\n";
-                    Thread.Sleep(100);
-                    System.Windows.Forms.Application.DoEvents();
-
-                    bool useAppPool = (bool)windowsAuthenticationSection["useAppPoolCredentials"];
-
-                    if (useAppPool == true)
-                        windowsAuthenticationSection["useAppPoolCredentials"] = false;
-                    else
-                        windowsAuthenticationSection["useAppPoolCredentials"] = true;
-
-                    textBox1.Text += "Reverted useAppPoolCredentials...\r\n";
-                    Thread.Sleep(100);
-                    System.Windows.Forms.Application.DoEvents();
-                }
-                else
-                {
-                    textBox1.Text += "Did not revert useAppPoolCredentials as it was not changed..\r\n";
-                    Thread.Sleep(100);
-                    System.Windows.Forms.Application.DoEvents();
-                }
-
-                if (isUseKernelChanged == true)
-                {
-
-                    textBox1.Text += "Reverting useKernelMode...\r\n";
-                    Thread.Sleep(100);
-                    System.Windows.Forms.Application.DoEvents();
-                    bool useKernel = (bool)windowsAuthenticationSection["useKernelMode"];
-
-                    if (useKernel == true)
-                        windowsAuthenticationSection["useKernelMode"] = false;
-                    else
-                        windowsAuthenticationSection["useKernelMode"] = true;
-
-                    textBox1.Text += "Reverted userKernelMode...\r\n";
-                    Thread.Sleep(100);
-                    System.Windows.Forms.Application.DoEvents();
-                }
-                else
-                {
-                    textBox1.Text += "Did not revert useKernelMode as it was not changed...\r\n";
-                    Thread.Sleep(100);
-                    System.Windows.Forms.Application.DoEvents();
-                }
-
-                textBox1.Text += "=======================================\r\n";
-
                 button3.Enabled = false;
-                serverMgr.CommitChanges();
-                StreamWriter w = new StreamWriter(filename, append: true);
-                w.WriteLine(DateTime.Now.ToString() + "\r\n----------------------------------------------------------\r\n");
-                string userName = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
-                w.WriteLine("Currently Logged-in User : " + userName + "\r\n");
-                w.WriteLine(textBox1.Text);
-                w.Close();
-                MessageBox.Show("All the settings have been reverted successfully!", "Success!");
+                DialogResult result = MessageBox.Show("Are you sure you want to revert the changes for this website?", "Alert!", MessageBoxButtons.YesNo);
+                if (result.ToString().Equals("Yes"))
+                {
+                    button4.Enabled = false;
+                    textBox1.Text = "Reverting changes\r\n======================\r\n";
+                    var serverMgr = new ServerManager();
+                    Configuration config = serverMgr.GetApplicationHostConfiguration();
+                    string selectedSite = this.comboBox2.GetItemText(this.comboBox2.SelectedItem);
+                    textBox1.Text += "Selected Site : " + selectedSite + "\r\n";
+                    Thread.Sleep(100);
+                    System.Windows.Forms.Application.DoEvents();
+                    if (isAnonymousChanged == true)
+                    {
+                        ConfigurationSection anonymousAuthenticationSection = config.GetSection("system.webServer/security/authentication/anonymousAuthentication", selectedSite);
+                        bool anonymous = (bool)anonymousAuthenticationSection["enabled"];
+                        if (anonymous == false)
+                        {
+                            textBox1.Text += "Reverting Anonymous auth...\r\n";
+                            Thread.Sleep(100);
+                            System.Windows.Forms.Application.DoEvents();
+                            anonymousAuthenticationSection["enabled"] = true;
+                            textBox1.Text += "Anonymous authentication reverted...\r\n";
+                            Thread.Sleep(100);
+                            System.Windows.Forms.Application.DoEvents();
+                        }
+                        else
+                        {
+                            textBox1.Text += "Reverting Anonymous auth...\r\n";
+                            Thread.Sleep(100);
+                            System.Windows.Forms.Application.DoEvents();
+                            anonymousAuthenticationSection["enabled"] = false;
+                            textBox1.Text += "Anonymous authentication reverted...\r\n";
+                            Thread.Sleep(100);
+                            System.Windows.Forms.Application.DoEvents();
+                        }
+                    }
+                    else
+                    {
+                        textBox1.Text += "Did not revert Anonymous authentication as it was not changed...\r\n";
+                        Thread.Sleep(100);
+                        System.Windows.Forms.Application.DoEvents();
+                    }
+
+                    if (isBasicChanged == true)
+                    {
+                        ConfigurationSection basicAuthenticationSection = config.GetSection("system.webServer/security/authentication/basicAuthentication", selectedSite);
+                        bool basic = (bool)basicAuthenticationSection["enabled"];
+                        if (basic == false)
+                        {
+                            textBox1.Text += "Reverting basic auth...\r\n";
+                            Thread.Sleep(100);
+                            System.Windows.Forms.Application.DoEvents();
+                            basicAuthenticationSection["enabled"] = true;
+                            textBox1.Text += "Basic authentication reverted...\r\n";
+                            Thread.Sleep(100);
+                            System.Windows.Forms.Application.DoEvents();
+                        }
+                        else
+                        {
+                            textBox1.Text += "Reverting Basic auth...\r\n";
+                            Thread.Sleep(100);
+                            System.Windows.Forms.Application.DoEvents();
+                            basicAuthenticationSection["enabled"] = false;
+                            textBox1.Text += "Basic authentication reverted...\r\n";
+                            Thread.Sleep(100);
+                            System.Windows.Forms.Application.DoEvents();
+                        }
+                    }
+                    else
+                    {
+                        textBox1.Text += "Did not revert Basic authentication as it was not changed...\r\n";
+                        Thread.Sleep(100);
+                        System.Windows.Forms.Application.DoEvents();
+                    }
+
+                    if (isDigestChanged == true)
+                    {
+                        ConfigurationSection digestAuthenticationSection = config.GetSection("system.webServer/security/authentication/digestAuthentication", selectedSite);
+                        bool digest = (bool)digestAuthenticationSection["enabled"];
+                        if (digest == false)
+                        {
+                            textBox1.Text += "Reverting digest auth...\r\n";
+                            Thread.Sleep(100);
+                            System.Windows.Forms.Application.DoEvents();
+                            digestAuthenticationSection["enabled"] = true;
+                            textBox1.Text += "digest authentication reverted...\r\n";
+                            Thread.Sleep(100);
+                            System.Windows.Forms.Application.DoEvents();
+                        }
+                        else
+                        {
+                            textBox1.Text += "Reverting digest auth...\r\n";
+                            Thread.Sleep(100);
+                            System.Windows.Forms.Application.DoEvents();
+                            digestAuthenticationSection["enabled"] = false;
+                            textBox1.Text += "digest authentication reverted...\r\n";
+                            Thread.Sleep(100);
+                            System.Windows.Forms.Application.DoEvents();
+                        }
+                    }
+                    else
+                    {
+                        textBox1.Text += "Did not revert digest authentication as it was not changed...\r\n";
+                        Thread.Sleep(100);
+                        System.Windows.Forms.Application.DoEvents();
+                    }
+
+                    if (isAspnetImpersonationChanged == true)
+                    {
+                        Configuration config1 = serverMgr.GetWebConfiguration(selectedSite);
+                        ConfigurationSection identitySection = config1.GetSection("system.web/identity");
+                        bool aspnetimpersonation = (bool)identitySection["impersonate"];
+                        if (aspnetimpersonation == false)
+                        {
+                            textBox1.Text += "Reverting aspnetimpersonation...\r\n";
+                            Thread.Sleep(100);
+                            System.Windows.Forms.Application.DoEvents();
+                            identitySection["impersonate"] = true;
+                            textBox1.Text += "aspnetimpersonation reverted...\r\n";
+                            Thread.Sleep(100);
+                            System.Windows.Forms.Application.DoEvents();
+                        }
+                        else
+                        {
+                            textBox1.Text += "Reverting aspnetimpersonation...\r\n";
+                            Thread.Sleep(100);
+                            System.Windows.Forms.Application.DoEvents();
+                            identitySection["impersonate"] = false;
+                            textBox1.Text += "aspnetimpersonation reverted...\r\n";
+                            Thread.Sleep(100);
+                            System.Windows.Forms.Application.DoEvents();
+                        }
+                    }
+                    else
+                    {
+                        textBox1.Text += "Did not revert aspnetimpersonation as it was not changed...\r\n";
+                        Thread.Sleep(100);
+                        System.Windows.Forms.Application.DoEvents();
+                    }
+
+                    ConfigurationSection windowsAuthenticationSection = config.GetSection("system.webServer/security/authentication/windowsAuthentication", selectedSite);
+
+                    if (isWindowsChanged == true)
+                    {
+
+                        bool windows = (bool)windowsAuthenticationSection["enabled"];
+                        if (windows == false)
+                        {
+                            textBox1.Text += "Reverting windows auth...\r\n";
+                            Thread.Sleep(100);
+                            System.Windows.Forms.Application.DoEvents();
+                            windowsAuthenticationSection["enabled"] = true;
+                            textBox1.Text += "windows auth reverted...\r\n";
+                            Thread.Sleep(100);
+                            System.Windows.Forms.Application.DoEvents();
+                        }
+                        else
+                        {
+                            textBox1.Text += "Reverting windows auth...\r\n";
+                            Thread.Sleep(100);
+                            System.Windows.Forms.Application.DoEvents();
+                            windowsAuthenticationSection["enabled"] = false;
+                            textBox1.Text += "Windows auth reverted...\r\n";
+                            Thread.Sleep(100);
+                            System.Windows.Forms.Application.DoEvents();
+                        }
+                    }
+                    else
+                    {
+                        textBox1.Text += "Did not revert Windows auth as it was not changed...\r\n";
+                        Thread.Sleep(100);
+                        System.Windows.Forms.Application.DoEvents();
+                    }
+
+                    if (isNegotiateChanged == true)
+                    {
+
+                        ConfigurationElementCollection providersCollection = windowsAuthenticationSection.GetCollection("providers");
+                        ConfigurationElement searchNegotiate = FindElement(providersCollection, "add", "value", @"Negotiate");
+                        ConfigurationElement searchOnPriority = FindElement(providersCollection, "add", "value", onPriority);
+                        textBox1.Text += "Reverting Providers...\r\n";
+                        Thread.Sleep(100);
+                        System.Windows.Forms.Application.DoEvents();
+                        searchNegotiate["value"] = onPriority;
+                        searchOnPriority["value"] = "Negotiate";
+                        textBox1.Text += "Reverted Providers...\r\n";
+                        Thread.Sleep(100);
+                        System.Windows.Forms.Application.DoEvents();
+                    }
+                    else
+                    {
+                        textBox1.Text += "Did not revert Providers as it was not changed...\r\n";
+                        Thread.Sleep(100);
+                        System.Windows.Forms.Application.DoEvents();
+                    }
+
+                    if (isUseAppPoolChanged == true)
+                    {
+                        textBox1.Text += "Reverting useAppPoolCredentials...\r\n";
+                        Thread.Sleep(100);
+                        System.Windows.Forms.Application.DoEvents();
+
+                        bool useAppPool = (bool)windowsAuthenticationSection["useAppPoolCredentials"];
+
+                        if (useAppPool == true)
+                            windowsAuthenticationSection["useAppPoolCredentials"] = false;
+                        else
+                            windowsAuthenticationSection["useAppPoolCredentials"] = true;
+
+                        textBox1.Text += "Reverted useAppPoolCredentials...\r\n";
+                        Thread.Sleep(100);
+                        System.Windows.Forms.Application.DoEvents();
+                    }
+                    else
+                    {
+                        textBox1.Text += "Did not revert useAppPoolCredentials as it was not changed..\r\n";
+                        Thread.Sleep(100);
+                        System.Windows.Forms.Application.DoEvents();
+                    }
+
+                    if (isUseKernelChanged == true)
+                    {
+
+                        textBox1.Text += "Reverting useKernelMode...\r\n";
+                        Thread.Sleep(100);
+                        System.Windows.Forms.Application.DoEvents();
+                        bool useKernel = (bool)windowsAuthenticationSection["useKernelMode"];
+
+                        if (useKernel == true)
+                            windowsAuthenticationSection["useKernelMode"] = false;
+                        else
+                            windowsAuthenticationSection["useKernelMode"] = true;
+
+                        textBox1.Text += "Reverted userKernelMode...\r\n";
+                        Thread.Sleep(100);
+                        System.Windows.Forms.Application.DoEvents();
+                    }
+                    else
+                    {
+                        textBox1.Text += "Did not revert useKernelMode as it was not changed...\r\n";
+                        Thread.Sleep(100);
+                        System.Windows.Forms.Application.DoEvents();
+                    }
+
+                    textBox1.Text += "=======================================\r\n";
+
+                    button3.Enabled = false;
+                    serverMgr.CommitChanges();
+                    StreamWriter w = new StreamWriter(filename, append: true);
+                    w.WriteLine(DateTime.Now.ToString() + "\r\n----------------------------------------------------------\r\n");
+                    string userName = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+                    w.WriteLine("Currently Logged-in User : " + userName + "\r\n");
+                    w.WriteLine(textBox1.Text);
+                    w.Close();
+                    MessageBox.Show("All the settings have been reverted successfully!", "Success!");
+                }
+                else
+                {
+                    button3.Enabled = true;
+                    return;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                button3.Enabled = true;
-                return;
+                textBox1.Text += "\r\nError\r\n=======\r\n" + ex + "\r\n\r\n";
+                MessageBox.Show("" + ex, "Fatal Error!");
             }
         }
 
