@@ -29,7 +29,7 @@ namespace KerberosConfigMgr
         static string month = DateTime.Today.Date.Month.ToString();
         static string year = DateTime.Today.Date.Year.ToString();
         static string filename = "k_log" + "_" + day + "_" + month + "_" + year + ".log";
-
+        bool delegation = false;
         [Flags()]
         public enum UserAccountControl : int
         {
@@ -107,11 +107,11 @@ namespace KerberosConfigMgr
 
                     if (radioButton2.Checked == true)
                     {
-                        DelegationQuery = true;  
+                        DelegationQuery = delegation = true;  
                     }
                     else if (radioButton1.Checked == true)
                     {
-                        DelegationQuery = false;
+                        DelegationQuery = delegation = false;
                     }
                     else
                     {
@@ -825,45 +825,63 @@ namespace KerberosConfigMgr
 
                     //bool isDelegationSetConf = false;
                     //bool isConstrainedDelegationSetConf = false;
-
-                    textBox1.Text += "\r\nRequired Delegation Settings\r\n";
-                    textBox1.Text += "====================================================\r\n";
-                    Thread.Sleep(100);
-                    System.Windows.Forms.Application.DoEvents();
-
-                    if (isDelegationSet == true)
+                    if (DelegationQuery == true)
                     {
-                        if (isConstrainedDelegationSet == true)
-                            textBox1.Text += "Delegation is already set but you need to verify the services!\r\n";
+                        textBox1.Text += "\r\nRequired Delegation Settings\r\n";
+                        textBox1.Text += "==================================================\r\n";
+                        Thread.Sleep(100);
+                        System.Windows.Forms.Application.DoEvents();
+
+                        if (isDelegationSet == true)
+                        {
+                            if (isConstrainedDelegationSet == true)
+                                textBox1.Text += "Delegation is already set but you need to verify the services!\r\n";
+                            else
+                                textBox1.Text += "Delegation is already set!\r\n";
+                        }
                         else
-                            textBox1.Text += "Delegation is already set!\r\n";
+                        {
+                            textBox1.Text += "Delegation is not set.\r\nWe need to configure Either Constrained or Unconstrained Delegation.\r\n";
+                        }
+                        Thread.Sleep(100);
+                        System.Windows.Forms.Application.DoEvents();
+
+                        textBox1.Text += "==================================================\r\n";
+                        Thread.Sleep(100);
+                        System.Windows.Forms.Application.DoEvents();
+                    }
+                    if (DelegationQuery == true)
+                    {
+                        textBox1.Text += "\r\n==>You can generate cmdlet and powershell script to set SPNs and configure delegation for the application pool user on DC\r\n";
+                        Thread.Sleep(100);
+                        System.Windows.Forms.Application.DoEvents();
+
+                        textBox1.Text += "==>Note that the powershell script which gets generated will only configure Unconstrained Delegation.\r\n";
+                        Thread.Sleep(100);
+                        System.Windows.Forms.Application.DoEvents();
+
+                        textBox1.Text += "==>Click the below button to save the cmdlet and ps1 files to current directory.\r\n";
+                        Thread.Sleep(100);
+                        System.Windows.Forms.Application.DoEvents();
+
+                        textBox1.Text += "==================================================\r\n";
+                        Thread.Sleep(100);
+                        System.Windows.Forms.Application.DoEvents();
                     }
                     else
                     {
-                        textBox1.Text += "Delegation is not set.\r\nWe need to configure Either Constrained or Unconstrained Delegation.\r\n";
+                        textBox1.Text += "\r\n==>You can generate cmdlet to set SPNs for application pool user on DC\r\n";
+                        Thread.Sleep(100);
+                        System.Windows.Forms.Application.DoEvents();
+
+                        textBox1.Text += "==>Click the below button to save the cmdlet to current directory.\r\n";
+                        Thread.Sleep(100);
+                        System.Windows.Forms.Application.DoEvents();
+
+                        textBox1.Text += "==================================================\r\n";
+                        Thread.Sleep(100);
+                        System.Windows.Forms.Application.DoEvents();
                     }
-                    Thread.Sleep(100);
-                    System.Windows.Forms.Application.DoEvents();
-
-                    textBox1.Text += "=====================================================\r\n";
-                    Thread.Sleep(100);
-                    System.Windows.Forms.Application.DoEvents();
-
-                    textBox1.Text += "\r\n==>You can Generate cmdlet and powershell script to set SPNs and configure delegation for the application pool user on DC\r\n";
-                    Thread.Sleep(100);
-                    System.Windows.Forms.Application.DoEvents();
-
-                    textBox1.Text += "==>Note that the powershell script which gets generated will only configure Unconstrained Delegation.\r\n";
-                    Thread.Sleep(100);
-                    System.Windows.Forms.Application.DoEvents();
-
-                    textBox1.Text += "==>Click the below button to save the files to current directory.\r\n";
-                    Thread.Sleep(100);
-                    System.Windows.Forms.Application.DoEvents();
-
-                    textBox1.Text += "=====================================================\r\n";
-                    Thread.Sleep(100);
-                    System.Windows.Forms.Application.DoEvents();
 
                     button4.Enabled = true;
                     Thread.Sleep(100);
@@ -1005,9 +1023,12 @@ namespace KerberosConfigMgr
                 File.Delete("spn.cmd");
             }
 
-            if(File.Exists("delegation.ps1"))
+            if (delegation == true)
             {
-                File.Delete("delegation.ps1");
+                if (File.Exists("delegation.ps1"))
+                {
+                    File.Delete("delegation.ps1");
+                }
             }
 
             using (StreamWriter fs = File.CreateText("spn.cmd"))
@@ -1020,19 +1041,25 @@ namespace KerberosConfigMgr
                 fs.Close();
             }
 
-            using (StreamWriter fs = File.CreateText("delegation.ps1"))
+            if (delegation == true)
             {
-                
+                using (StreamWriter fs = File.CreateText("delegation.ps1"))
+                {
 
-                fs.WriteLine("Import-Module ActiveDirectory");
-                if(isUsingCustomAppPoolDelegation == true)
-                    fs.WriteLine("Set-ADAccountControl -Identity '" + UserGlobalDeleg + "' -TrustedForDelegation $true");
-                else
-                    fs.WriteLine("Set-ADAccountControl -Identity '" + UserGlobalDeleg + "$' -TrustedForDelegation $true");
-                fs.Close();
+
+                    fs.WriteLine("Import-Module ActiveDirectory");
+                    if (isUsingCustomAppPoolDelegation == true)
+                        fs.WriteLine("Set-ADAccountControl -Identity '" + UserGlobalDeleg + "' -TrustedForDelegation $true");
+                    else
+                        fs.WriteLine("Set-ADAccountControl -Identity '" + UserGlobalDeleg + "$' -TrustedForDelegation $true");
+                    fs.Close();
+                }
             }
             spnValue.Clear();
-            MessageBox.Show("Scripts Generated and Saved to current directory for adding SPNs and Configuring Delegation!", "Success!");
+            if(delegation == true)
+                MessageBox.Show("Scripts Generated and Saved to current directory for adding SPNs and Configuring Delegation!", "Success!");
+            else
+                MessageBox.Show("Script Generated and Saved to current directory for adding SPNs!", "Success!");
             button4.Enabled = false;
         }
         string app1;
@@ -1641,6 +1668,7 @@ namespace KerberosConfigMgr
                             {
                                 textBox1.Text += "\r\nError\r\n=======\r\n" + e4 + "\r\n\r\n";
                                 MessageBox.Show("" + e4, "Fatal Error!");
+                                textBox1.Text += "====================================================\r\n";
                             }
 
                         }
@@ -1648,24 +1676,26 @@ namespace KerberosConfigMgr
 
                     progressBar1.Value = 95;
 
-                    textBox1.Text += "\r\nRequired Delegation Settings\r\n";
-                    textBox1.Text += "====================================================\r\n";
-                    Thread.Sleep(100);
-                    System.Windows.Forms.Application.DoEvents();
-
-                    if (isDelegationSet == true)
+                    if (DelegationQuery == true)
                     {
-                        if (isConstrainedDelegationSet == true)
-                            textBox1.Text += "Delegation is already set but you need to verify the services!\r\n";
+                        textBox1.Text += "\r\nRequired Delegation Settings\r\n";
+                        textBox1.Text += "====================================================\r\n";
+                        Thread.Sleep(100);
+                        System.Windows.Forms.Application.DoEvents();
+
+                        if (isDelegationSet == true)
+                        {
+                            if (isConstrainedDelegationSet == true)
+                                textBox1.Text += "Delegation is already set but you need to verify the services!\r\n";
+                            else
+                                textBox1.Text += "Delegation is already set!\r\n";
+                        }
                         else
-                            textBox1.Text += "Delegation is already set!\r\n";
+                        {
+                            textBox1.Text += "Delegation is not set.\r\nWe need to configure Either Constrained or Unconstrained Delegation.\r\n";
+                        }
+                        textBox1.Text += "====================================================\r\n";
                     }
-                    else
-                    {
-                        textBox1.Text += "Delegation is not set.\r\nWe need to configure Either Constrained or Unconstrained Delegation.\r\n";
-                    }
-                    textBox1.Text += "====================================================\r\n";
-
                     progressBar1.Value = 100;
                     serverMgr.CommitChanges();
                     button2.Enabled = false;
