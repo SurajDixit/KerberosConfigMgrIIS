@@ -52,3 +52,15 @@ C:\Users\sudixi\Source\Repos\KerberosConfigMgr2\KerberosConfigMgr\obj\Debug\Kerb
 C:\Users\sudixi\Source\Repos\KerberosConfigMgr2\KerberosConfigMgr\obj\Debug\KerberosConfigMgr.pdb
 C:\Users\sudixi\Source\Repos\KerberosConfigMgr2\KerberosConfigMgr\obj\Debug\Kerberos.csprojResolveAssemblyReference.cache
 C:\Users\sudixi\Source\Repos\KerberosConfigMgr2\KerberosConfigMgr\obj\Debug\Kerberos.csproj.CoreCompileInputs.cache
+C:\Users\sudixi\Source\Repos\KerberosConfigMgr2\KerberosConfigMgrIIS\bin\Debug\KerberosConfigMgrIIS.exe.config
+C:\Users\sudixi\Source\Repos\KerberosConfigMgr2\KerberosConfigMgrIIS\bin\Debug\KerberosConfigMgrIIS.exe
+C:\Users\sudixi\Source\Repos\KerberosConfigMgr2\KerberosConfigMgrIIS\bin\Debug\KerberosConfigMgrIIS.pdb
+C:\Users\sudixi\Source\Repos\KerberosConfigMgr2\KerberosConfigMgrIIS\bin\Debug\Microsoft.Web.Administration.dll
+C:\Users\sudixi\Source\Repos\KerberosConfigMgr2\KerberosConfigMgrIIS\obj\Debug\Kerberos.csprojResolveAssemblyReference.cache
+C:\Users\sudixi\Source\Repos\KerberosConfigMgr2\KerberosConfigMgrIIS\obj\Debug\KerberosConfigMgr.Kerberos.resources
+C:\Users\sudixi\Source\Repos\KerberosConfigMgr2\KerberosConfigMgrIIS\obj\Debug\KerberosConfigMgr.Properties.Resources.resources
+C:\Users\sudixi\Source\Repos\KerberosConfigMgr2\KerberosConfigMgrIIS\obj\Debug\Kerberos.csproj.GenerateResource.cache
+C:\Users\sudixi\Source\Repos\KerberosConfigMgr2\KerberosConfigMgrIIS\obj\Debug\Kerberos.csproj.CoreCompileInputs.cache
+C:\Users\sudixi\Source\Repos\KerberosConfigMgr2\KerberosConfigMgrIIS\obj\Debug\Kerberos.csproj.CopyComplete
+C:\Users\sudixi\Source\Repos\KerberosConfigMgr2\KerberosConfigMgrIIS\obj\Debug\KerberosConfigMgrIIS.exe
+C:\Users\sudixi\Source\Repos\KerberosConfigMgr2\KerberosConfigMgrIIS\obj\Debug\KerberosConfigMgrIIS.pdb

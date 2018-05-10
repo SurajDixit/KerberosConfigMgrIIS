@@ -20,3 +20,4 @@ C:\Users\sudixi\Source\Repos\KerberosConfigMgr2\KerberosConfigMgrIIS\obj\Release
 C:\Users\sudixi\Source\Repos\KerberosConfigMgr2\KerberosConfigMgrIIS\obj\Release\Kerberos.csproj.CopyComplete
 C:\Users\sudixi\Source\Repos\KerberosConfigMgr2\KerberosConfigMgrIIS\obj\Release\KerberosConfigMgrIIS.exe
 C:\Users\sudixi\Source\Repos\KerberosConfigMgr2\KerberosConfigMgrIIS\obj\Release\KerberosConfigMgrIIS.pdb
+C:\Users\sudixi\Source\Repos\KerberosConfigMgr2\KerberosConfigMgrIIS\obj\Release\Kerberos.csprojResolveAssemblyReference.cache

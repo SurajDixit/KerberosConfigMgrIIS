@@ -470,7 +470,7 @@ namespace KerberosConfigMgr
                                 string[] split = UName.Split('\\');
                                 UserGlobalDeleg = split[1];
                                 isUsingCustomAppPoolDelegation = true;
-                                foreach (string value in ListSPN("HTTP", split[1]))
+                                foreach (string value in ListSPN("HTTP", isUsingPoolIdentity, split[1]))
                                 {
                                     if (value != null)
                                     {
@@ -486,7 +486,7 @@ namespace KerberosConfigMgr
 
                                 }
 
-                                foreach (string value in ListSPN("http", split[1]))
+                                foreach (string value in ListSPN("http", isUsingPoolIdentity, split[1]))
                                 {
                                     if (value != null)
                                     {
@@ -529,7 +529,7 @@ namespace KerberosConfigMgr
                                 textBox1.Text += "==================================================\r\n";
                                 Thread.Sleep(100);
                                 System.Windows.Forms.Application.DoEvents();
-                                foreach (string value in ListSPN("HOST", computerName))
+                                foreach (string value in ListSPN("HOST", isUsingPoolIdentity, computerName))
                                 {
                                     if (value != null)
                                     {
@@ -545,7 +545,7 @@ namespace KerberosConfigMgr
 
                                 }
 
-                                foreach (string value in ListSPN("host", computerName))
+                                foreach (string value in ListSPN("host", isUsingPoolIdentity, computerName))
                                 {
                                     if (value != null)
                                     {
@@ -923,8 +923,9 @@ namespace KerberosConfigMgr
             throw new NotImplementedException();
         }
 
-        ArrayList ListSPN(string ServiceType, string AccountName = "")
+        ArrayList ListSPN(string ServiceType, bool isUsingAppPool , string AccountName = "")
         {
+            
             ArrayList SPNs = new ArrayList();
             string spnfilter = "(servicePrincipalName={0}/*)";
             spnfilter = String.Format(spnfilter, ServiceType);
@@ -932,15 +933,27 @@ namespace KerberosConfigMgr
             System.DirectoryServices.DirectorySearcher searcher = new DirectorySearcher();
             searcher.SearchRoot = domain;
             searcher.PageSize = 1000;
-            searcher.Filter = spnfilter;
-            SearchResultCollection results;
+            //searcher.Filter = spnfilter;
+
+            //<summary>
+            //Add-on for v2.1
+            //-checking if the account is a machine account or a user account
+            //-then adding this filter to search the account in the directory
+            //-Using this filter we can just fetch one account details rather than enumerating through each account
+            //</summary>
+
+            if(isUsingAppPool == false)
+                searcher.Filter ="(sAMAccountName=" + AccountName + "$)";
+            else
+                searcher.Filter = "(sAMAccountName=" + AccountName + ")";
+            SearchResult result;
             try {
-                results = searcher.FindAll();
-                foreach (SearchResult result in results)
+                result = searcher.FindOne();
+                //foreach (SearchResult result in results)
                 {
                     DirectoryEntry account = result.GetDirectoryEntry();
-                    if (account.Properties["sAMAccountName"].Value.ToString().Contains(AccountName))
-                    {
+                   // if (account.Properties["sAMAccountName"].Value.ToString().Contains(AccountName))
+                   // {
                         foreach (string spn in account.Properties["servicePrincipalName"])
                         {
                             if (spn.Contains(ServiceType))
@@ -949,7 +962,7 @@ namespace KerberosConfigMgr
                             }
                         }
                     }
-                }
+               // }
                 
             }
 
@@ -1342,7 +1355,7 @@ namespace KerberosConfigMgr
                                 UName = pool.ProcessModel.UserName;
                                 UserGlobal = UName;
                                 string[] split = UName.Split('\\');
-                                foreach (string value in ListSPN("HTTP", split[1]))
+                                foreach (string value in ListSPN("HTTP",isUsingPoolIdentity, split[1]))
                                 {
                                     if (value != null)
                                     {
@@ -1358,7 +1371,7 @@ namespace KerberosConfigMgr
 
                                 }
 
-                                foreach (string value in ListSPN("http", split[1]))
+                                foreach (string value in ListSPN("http", isUsingPoolIdentity, split[1]))
                                 {
                                     if (value != null)
                                     {
@@ -1399,7 +1412,7 @@ namespace KerberosConfigMgr
                                 textBox1.Text += "==================================================\r\n";
                                 Thread.Sleep(100);
                                 System.Windows.Forms.Application.DoEvents();
-                                foreach (string value in ListSPN("HOST", computerName))
+                                foreach (string value in ListSPN("HOST", isUsingPoolIdentity, computerName))
                                 {
                                     if (value != null)
                                     {
@@ -1415,7 +1428,7 @@ namespace KerberosConfigMgr
 
                                 }
 
-                                foreach (string value in ListSPN("host", computerName))
+                                foreach (string value in ListSPN("host", isUsingPoolIdentity, computerName))
                                 {
                                     if (value != null)
                                     {
