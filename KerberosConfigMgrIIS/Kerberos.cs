@@ -13,6 +13,7 @@ using System.DirectoryServices.ActiveDirectory;
 using System.Collections;
 using System.Threading;
 using System.IO;
+using System.Reflection;
 
 namespace KerberosConfigMgr
 {
@@ -1038,20 +1039,23 @@ namespace KerberosConfigMgr
 
         private void button4_Click(object sender, EventArgs e)
         {
-            if (File.Exists("spn.cmd"))
+            string folder = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\SPN\\";
+            System.IO.Directory.CreateDirectory(folder);
+
+            if (File.Exists(folder+"spn.cmd"))
             {
-                File.Delete("spn.cmd");
+                File.Delete(folder+"spn.cmd");
             }
 
             if (delegation == true)
             {
-                if (File.Exists("delegation.ps1"))
+                if (File.Exists(folder+"delegation.ps1"))
                 {
-                    File.Delete("delegation.ps1");
+                    File.Delete(folder+"delegation.ps1");
                 }
             }
 
-            using (StreamWriter fs = File.CreateText("spn.cmd"))
+            using (StreamWriter fs = File.CreateText(folder+"spn.cmd"))
             {
                 foreach (string spn in spnValue)
                 {
@@ -1063,7 +1067,7 @@ namespace KerberosConfigMgr
 
             if (delegation == true)
             {
-                using (StreamWriter fs = File.CreateText("delegation.ps1"))
+                using (StreamWriter fs = File.CreateText(folder+"delegation.ps1"))
                 {
 
 
@@ -1077,11 +1081,14 @@ namespace KerberosConfigMgr
             }
             spnValue.Clear();
             if(delegation == true)
-                MessageBox.Show("Scripts Generated and Saved to current directory for adding SPNs and Configuring Delegation!", "Success!");
+                MessageBox.Show("Scripts Generated and Saved for adding SPNs and Configuring Delegation! \nPlease click on Folder Icon to Open the Scripts.", "Success!");
             else
-                MessageBox.Show("Script Generated and Saved to current directory for adding SPNs!", "Success!");
+                MessageBox.Show("Script Generated and Saved for adding SPNs! \nPlease click on Folder Icon to Open the Scripts.", "Success!");
+            imgFolderIcon.Visible = true;
             button4.Enabled = false;
         }
+
+
         string app1;
         string selectedSite1;
         private void button2_Click(object sender, EventArgs e)
@@ -2032,6 +2039,13 @@ namespace KerberosConfigMgr
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
 
+        }
+
+        //Open Scripts Folder
+        private void folderClick_Click(object sender, EventArgs e)
+        {
+            string folder = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\SPN\\";
+            System.Diagnostics.Process.Start(folder);
         }
     }
 
