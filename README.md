@@ -69,14 +69,14 @@ I have developed a simple troubleshooter “Kerberos Configuration Manager for I
       - Checks and displays Digest authentication properties
       - Checks and displays ASP.NET Impersonation properties
       - Checks and displays Windows authentication
-        - whether Windows authentication is enabled or disabled
-        - What are the Providers settings
+        * whether Windows authentication is enabled or disabled
+        * What are the Providers settings
       - Checks and displays Configuration editor settings for windows authentication
-        - UseAppPoolCredentials settings 
-        - UseKernelMode settings
+        * UseAppPoolCredentials settings 
+        * UseKernelMode settings
       - Based on the Application pool identity, 
-        - Checks for the existing SPNs for that identity and displays them
-        - Displays the necessary SPNs required for Kerberos to work 
+        * Checks for the existing SPNs for that identity and displays them
+        * Displays the necessary SPNs required for Kerberos to work 
 
 2.	Configures Kerberos for the affected website:
 a.	Disables Anonymous authentication if enabled
