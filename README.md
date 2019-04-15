@@ -62,21 +62,21 @@ Now just imagine if we can automate the above process through a nifty applicatio
 I have developed a simple troubleshooter “Kerberos Configuration Manager for IIS” which allows one to do the following tasks:
 
 1.	Review the current settings related to Kerberos for any specific website in IIS. 
-a.	Checks and displays the site properties
-b.	Checks and displays Application pool properties like Application pool identity
-c.	Checks and displays Anonymous authentication properties
-d.	Checks and displays Basic authentication properties
-e.	Checks and displays Digest authentication properties
-f.	Checks and displays ASP.NET Impersonation properties
-g.	Checks and displays Windows authentication
-i.	whether Windows authentication is enabled or disabled
-ii.	What are the Providers settings
-h.	Checks and displays Configuration editor settings for windows authentication
-i.	UseAppPoolCredentials settings 
-ii.	UseKernelMode settings
-i.	Based on the Application pool identity, 
-i.	Checks for the existing SPNs for that identity and displays them
-ii.	Displays the necessary SPNs required for Kerberos to work 
+  - Checks and displays the site properties
+  - Checks and displays Application pool properties like Application pool identity
+  - Checks and displays Anonymous authentication properties
+  - Checks and displays Basic authentication properties
+  - Checks and displays Digest authentication properties
+  - Checks and displays ASP.NET Impersonation properties
+  - Checks and displays Windows authentication
+    - whether Windows authentication is enabled or disabled
+    - What are the Providers settings
+  - Checks and displays Configuration editor settings for windows authentication
+    - UseAppPoolCredentials settings 
+    - UseKernelMode settings
+  - Based on the Application pool identity, 
+    - Checks for the existing SPNs for that identity and displays them
+    - Displays the necessary SPNs required for Kerberos to work 
 
 2.	Configures Kerberos for the affected website:
 a.	Disables Anonymous authentication if enabled
