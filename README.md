@@ -37,15 +37,15 @@ On IIS:
 1.	Disable all the authentication methods except windows authentication
 2.	In windows authentication section, in Providers we should see negotiate should be a priority
 3.	Based on the Application pool credentials,
-a.	useAppPoolCredentials to true if we are using a custom account
-b.	useAppPoolCredentials to false and useKernelMode to true if we are using a machine account
+  - useAppPoolCredentials to true if we are using a custom account
+  - useAppPoolCredentials to false and useKernelMode to true if we are using a machine account
 
 On Domain Controller:
 
-1.	Based on the Application pool credentials on the IIS we set Service Principle names on the DC.
-a.	If we use a Machine account, set SPNs on Machine account
-b.	If we use a custom account, set SPNs on custom account
-2.	The above also depends on whether we are using a hostname or machine to browse the website
+  - Based on the Application pool credentials on the IIS we set Service Principle names on the DC.
+    - If we use a Machine account, set SPNs on Machine account
+  - If we use a custom account, set SPNs on custom account
+    - The above also depends on whether we are using a hostname or machine to browse the website
 
 On Client Browser(Internet Explorer):
 
