@@ -53,8 +53,8 @@ On Client Browser(Internet Explorer):
 
 You can find more information regarding Configuration of Kerberos in the below blogs:
 
-url(https://blogs.msdn.microsoft.com/chiranth/2013/09/20/all-about-kerberos-the-three-headed-dog-with-respect-to-iis-and-sql/)
-url(https://blogs.msdn.microsoft.com/chiranth/2014/04/17/setting-up-kerberos-authentication-for-a-website-in-iis/)
+[All-about-kerberos-the-three-headed-dog-with-respect-to-iis-and-sql](https://blogs.msdn.microsoft.com/chiranth/2013/09/20/all-about-kerberos-the-three-headed-dog-with-respect-to-iis-and-sql/)
+[Setting-up-kerberos-authentication-for-a-website-in-iis](https://blogs.msdn.microsoft.com/chiranth/2014/04/17/setting-up-kerberos-authentication-for-a-website-in-iis/)
 
 
 Now just imagine if we can automate the above process through a nifty application which can help us troubleshoot/configure Kerberos in just a few minutes – Is it possible? The good news is that NOW IT IS POSSIBLE 
