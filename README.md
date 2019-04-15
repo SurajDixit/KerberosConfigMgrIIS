@@ -28,10 +28,6 @@ To address these issues, I have created the “Kerberos Configuration Manager fo
 <li>Auditing support which makes troubleshooting Kerberos easier.</li>
 </ul>	
 
-For documentation on how to use, follow the below blog: 
-
-https://blogs.msdn.microsoft.com/surajdixit/2018/02/07/kerberos-configuration-manager-for-internet-information-services-server/
-
 Let’s see what exactly happens “Under the Hood”:
 
 At a high level, the below steps needs to be followed to configure Kerberos for a website:
@@ -57,8 +53,8 @@ On Client Browser(Internet Explorer):
 
 You can find more information regarding Configuration of Kerberos in the below blogs:
 
-https://blogs.msdn.microsoft.com/chiranth/2013/09/20/all-about-kerberos-the-three-headed-dog-with-respect-to-iis-and-sql/
-https://blogs.msdn.microsoft.com/chiranth/2014/04/17/setting-up-kerberos-authentication-for-a-website-in-iis/
+url(https://blogs.msdn.microsoft.com/chiranth/2013/09/20/all-about-kerberos-the-three-headed-dog-with-respect-to-iis-and-sql/)
+url(https://blogs.msdn.microsoft.com/chiranth/2014/04/17/setting-up-kerberos-authentication-for-a-website-in-iis/)
 
 
 Now just imagine if we can automate the above process through a nifty application which can help us troubleshoot/configure Kerberos in just a few minutes – Is it possible? The good news is that NOW IT IS POSSIBLE 
