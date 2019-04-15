@@ -31,3 +31,75 @@ To address these issues, I have created the “Kerberos Configuration Manager fo
 For documentation on how to use, follow the below blog: 
 
 https://blogs.msdn.microsoft.com/surajdixit/2018/02/07/kerberos-configuration-manager-for-internet-information-services-server/
+
+Let’s see what exactly happens “Under the Hood”:
+
+At a high level, the below steps needs to be followed to configure Kerberos for a website:
+
+On IIS:
+
+1.	Disable all the authentication methods except windows authentication
+2.	In windows authentication section, in Providers we should see negotiate should be a priority
+3.	Based on the Application pool credentials,
+a.	useAppPoolCredentials to true if we are using a custom account
+b.	useAppPoolCredentials to false and useKernelMode to true if we are using a machine account
+
+On Domain Controller:
+
+1.	Based on the Application pool credentials on the IIS we set Service Principle names on the DC.
+a.	If we use a Machine account, set SPNs on Machine account
+b.	If we use a custom account, set SPNs on custom account
+2.	The above also depends on whether we are using a hostname or machine to browse the website
+
+On Client Browser(Internet Explorer):
+
+1.	Based on whether we use hostname or not, we need to add the host/machine name to Trusted sites/Local Intranet Zone.
+
+You can find more information regarding Configuration of Kerberos in the below blogs:
+
+https://blogs.msdn.microsoft.com/chiranth/2013/09/20/all-about-kerberos-the-three-headed-dog-with-respect-to-iis-and-sql/
+https://blogs.msdn.microsoft.com/chiranth/2014/04/17/setting-up-kerberos-authentication-for-a-website-in-iis/
+
+
+Now just imagine if we can automate the above process through a nifty application which can help us troubleshoot/configure Kerberos in just a few minutes – Is it possible? The good news is that NOW IT IS POSSIBLE 
+
+I have developed a simple troubleshooter “Kerberos Configuration Manager for IIS” which allows one to do the following tasks:
+
+1.	Review the current settings related to Kerberos for any specific website in IIS. 
+a.	Checks and displays the site properties
+b.	Checks and displays Application pool properties like Application pool identity
+c.	Checks and displays Anonymous authentication properties
+d.	Checks and displays Basic authentication properties
+e.	Checks and displays Digest authentication properties
+f.	Checks and displays ASP.NET Impersonation properties
+g.	Checks and displays Windows authentication
+i.	whether Windows authentication is enabled or disabled
+ii.	What are the Providers settings
+h.	Checks and displays Configuration editor settings for windows authentication
+i.	UseAppPoolCredentials settings 
+ii.	UseKernelMode settings
+i.	Based on the Application pool identity, 
+i.	Checks for the existing SPNs for that identity and displays them
+ii.	Displays the necessary SPNs required for Kerberos to work 
+
+2.	Configures Kerberos for the affected website:
+a.	Disables Anonymous authentication if enabled
+b.	Disables Basic authentication if enabled
+c.	Disables Digest authentication if enabled
+d.	Disables ASP.NET Impersonation if enabled
+e.	Enables Windows authentication if disabled
+i.	Once the above is enabled, checks whether we have Negotiate on priority or no. If not, Negotiate is moved to the top
+f.	Based on the application pool credentials,
+i.	Either it will enable useAppPoolCredentials or disables it
+ii.	Either it will enable useKernelMode or disables it
+g.	Based on the Application pool identity, 
+i.	Checks for the existing SPNs for that identity and displays them
+ii.	Displays the necessary SPNs required for Kerberos to work 
+h.	Generates the script for setting the required SPNs in the same directory
+
+3.	It also has a provision to revert the changes made just in case there is a requirement.
+
+4.	It also has a feature of auditing through a log file which would capture the below details:
+a.	Logged in user who used the tool and made changes
+b.	Timestamp when the changes were made
+c.	Review, Configure and Revert logs (All settings which were added/modified)
