@@ -61,7 +61,7 @@ Now just imagine if we can automate the above process through a nifty applicatio
 
 I have developed a simple troubleshooter “Kerberos Configuration Manager for IIS” which allows one to do the following tasks:
 
-  - Review the current settings related to Kerberos for any specific website in IIS. 
+1. Review the current settings related to Kerberos for any specific website in IIS. 
       - Checks and displays the site properties
       - Checks and displays Application pool properties like Application pool identity
       - Checks and displays Anonymous authentication properties
