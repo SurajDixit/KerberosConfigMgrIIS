@@ -17,22 +17,11 @@ To address these issues, I have created the “Kerberos Configuration Manager fo
 <li>It also has a feature of auditing through a log file.</li>
 </ul>
 
-<b>Why should I use tool?</b>
-
-<ul>
-<li>Troubleshooting Kerberos just becomes much simpler with this tool and it optimizes the time taken to troubleshoot from few hours to few minutes.</li>
-<li>You can review the Kerberos Configuration for any of your web sites and share the generated log files with support to save precious troubleshooting time.</li>
-<li>No need to install the tool -  it’s a standalone executable.</li>
-<li>Disk space utilization is minimal.</li>
-<li>Open source, free to download and modify.</li>
-<li>Auditing support which makes troubleshooting Kerberos easier.</li>
-</ul>	
-
-Let’s see what exactly happens “Under the Hood”:
+**Let’s see what exactly happens “Under the Hood”:**
 
 At a high level, the below steps needs to be followed to configure Kerberos for a website:
 
-On IIS:
+**On IIS Server:**
 
 1.	Disable all the authentication methods except windows authentication
 2.	In windows authentication section, in Providers we should see negotiate should be a priority
@@ -40,18 +29,18 @@ On IIS:
   - useAppPoolCredentials to true if we are using a custom account
   - useAppPoolCredentials to false and useKernelMode to true if we are using a machine account
 
-On Domain Controller:
+**On Domain Controller:**
 
   - Based on the Application pool credentials on the IIS we set Service Principle names on the DC.
     - If we use a Machine account, set SPNs on Machine account
   - If we use a custom account, set SPNs on custom account
     - The above also depends on whether we are using a hostname or machine to browse the website
 
-On Client Browser(Internet Explorer):
+**On Client Browser(Internet Explorer):**
 
-1.	Based on whether we use hostname or not, we need to add the host/machine name to Trusted sites/Local Intranet Zone.
+- Based on whether we use hostname or not, we need to add the host/machine name to Trusted sites/Local Intranet Zone.
 
-You can find more information regarding Configuration of Kerberos in the below blogs:
+**You can find more information regarding Configuration of Kerberos in the below blogs:**
 
 - [All-about-kerberos-the-three-headed-dog-with-respect-to-iis-and-sql](https://blogs.msdn.microsoft.com/chiranth/2013/09/20/all-about-kerberos-the-three-headed-dog-with-respect-to-iis-and-sql/)
 - [Setting-up-kerberos-authentication-for-a-website-in-iis](https://blogs.msdn.microsoft.com/chiranth/2014/04/17/setting-up-kerberos-authentication-for-a-website-in-iis/)
@@ -119,16 +108,16 @@ The good news is that we have released the Kerberos Configuration Manager v2.0 w
 - Open source, free to download and modify.
 - Auditing support which makes troubleshooting Kerberos easier.
 
-Where do I get it from and how do I use it?
+**Where do I get it from and how do I use it?**
 
 The tool can be downloaded from the open source github repo:
 
-Latest release:  https://github.com/SurajDixit/KerberosConfigMgrIIS/releases/download/v2.1/KerberosConfigMgrIIS.exe
+**Latest release:**  https://github.com/SurajDixit/KerberosConfigMgrIIS/releases/download/v2.1/KerberosConfigMgrIIS.exe
 
-All releases :  https://github.com/SurajDixit/KerberosConfigMgrIIS/releases
+**All releases:**  https://github.com/SurajDixit/KerberosConfigMgrIIS/releases
 
 The GUI has a fairly simple layout with the options to Review, Configure, Generate Script and Revert the Kerberos related configuration settings.
 
-Instructions for use:
+**Instructions for use:**
 
 https://docs.microsoft.com/en-us/archive/blogs/surajdixit/kerberos-configuration-manager-for-internet-information-services-server
