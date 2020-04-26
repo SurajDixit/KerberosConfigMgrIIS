@@ -99,3 +99,36 @@ h.	Generates the script for setting the required SPNs in the same directory
 a.	Logged in user who used the tool and made changes
 b.	Timestamp when the changes were made
 c.	Review, Configure and Revert logs (All settings which were added/modified)
+
+The good news is that we have released the Kerberos Configuration Manager v2.0 which supports reviewing and configuring the Kerberos Pass-through authentication also (Kerberos Double Hop).
+
+**Whats new in Kerberos Configuration Manager v2.0 ?**
+
+- Double Hop Support - Delegation and Impersonation
+- UI changes
+- Scroll view for the text area
+- Application can run as administrator without any intervention
+- Bug fixes
+
+**Why should I use tool?:**
+
+- Troubleshooting Kerberos just becomes much simpler with this tool and it optimizes the time taken to troubleshoot from few hours to few minutes.
+- You can review the Kerberos Configuration for any of your web sites and share the generated log files with support to save precious troubleshooting time.
+- No need to install the tool -  it’s a standalone executable.
+- Disk space utilization is minimal.
+- Open source, free to download and modify.
+- Auditing support which makes troubleshooting Kerberos easier.
+
+Where do I get it from and how do I use it?
+
+The tool can be downloaded from the open source github repo:
+
+Latest release:  https://github.com/SurajDixit/KerberosConfigMgrIIS/releases/download/v2.1/KerberosConfigMgrIIS.exe
+
+All releases :  https://github.com/SurajDixit/KerberosConfigMgrIIS/releases
+
+The GUI has a fairly simple layout with the options to Review, Configure, Generate Script and Revert the Kerberos related configuration settings.
+
+Instructions for use:
+
+https://docs.microsoft.com/en-us/archive/blogs/surajdixit/kerberos-configuration-manager-for-internet-information-services-server
