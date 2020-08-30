@@ -76,3 +76,10 @@ C:\Users\sudixi\Documents\GitHub\KerberosConfigMgrIIS\KerberosConfigMgrIIS\obj\D
 C:\Users\sudixi\Documents\GitHub\KerberosConfigMgrIIS\KerberosConfigMgrIIS\obj\Debug\KerberosConfigMgrIIS.exe
 C:\Users\sudixi\Documents\GitHub\KerberosConfigMgrIIS\KerberosConfigMgrIIS\obj\Debug\KerberosConfigMgrIIS.pdb
 C:\Users\sudixi\Documents\GitHub\KerberosConfigMgrIIS\KerberosConfigMgrIIS\obj\Debug\Kerberos.csprojAssemblyReference.cache
+C:\Users\sudixi\Documents\GitHub\KerberosConfigMgrIIS\KerberosConfigMgrIIS\bin\Debug\Serilog.dll
+C:\Users\sudixi\Documents\GitHub\KerberosConfigMgrIIS\KerberosConfigMgrIIS\bin\Debug\Serilog.Sinks.Console.dll
+C:\Users\sudixi\Documents\GitHub\KerberosConfigMgrIIS\KerberosConfigMgrIIS\bin\Debug\Serilog.Sinks.File.dll
+C:\Users\sudixi\Documents\GitHub\KerberosConfigMgrIIS\KerberosConfigMgrIIS\bin\Debug\Serilog.xml
+C:\Users\sudixi\Documents\GitHub\KerberosConfigMgrIIS\KerberosConfigMgrIIS\bin\Debug\Serilog.Sinks.Console.xml
+C:\Users\sudixi\Documents\GitHub\KerberosConfigMgrIIS\KerberosConfigMgrIIS\bin\Debug\Serilog.Sinks.File.pdb
+C:\Users\sudixi\Documents\GitHub\KerberosConfigMgrIIS\KerberosConfigMgrIIS\bin\Debug\Serilog.Sinks.File.xml

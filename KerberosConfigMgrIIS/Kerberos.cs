@@ -13,6 +13,8 @@ using System.DirectoryServices.ActiveDirectory;
 using System.Collections;
 using System.Threading;
 using System.IO;
+using Serilog;
+using Serilog.Core;
 
 namespace KerberosConfigMgr
 {
@@ -31,6 +33,12 @@ namespace KerberosConfigMgr
         static string filename = "k_log" + "_" + day + "_" + month + "_" + year + ".log";
         bool delegation = false;
         ToolTip toolTip2 = new ToolTip();
+        Logger log = new LoggerConfiguration()
+                .WriteTo.Console()
+                .WriteTo.File("log.txt")
+                .CreateLogger();
+
+
         [Flags()]
         public enum UserAccountControl : int
         {
@@ -40,7 +48,9 @@ namespace KerberosConfigMgr
         public Kerberos()
         {
             InitializeComponent();
+            log.Information("========= Program Start =========");
             comboBox2.DropDownStyle = ComboBoxStyle.DropDownList;
+            log.Information("Combobox created");
             var serverMgr = new ServerManager();
             SiteCollection s = serverMgr.Sites;
             foreach (Site site in serverMgr.Sites)
@@ -52,6 +62,7 @@ namespace KerberosConfigMgr
                         comboBox2.Items.Add(site.Name + app.Path);                        
                 }
             }
+            log.Information("Sites loaded");
             textBox1.ReadOnly = true;
             textBox1.ScrollBars = ScrollBars.Vertical;
             textBox1.WordWrap = true;
@@ -64,7 +75,7 @@ namespace KerberosConfigMgr
             string date = DateTime.Now.ToString();
             w.WriteLine("Start :" + date + "\r\n----------------------------------------------------------\r\n");
             w.Close();
-
+            
         }
         string app2;
         string selectedSite2;
@@ -1029,6 +1040,7 @@ namespace KerberosConfigMgr
         
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
+            log.Information("Default Selected Site: "+ comboBox2.SelectedItem);
             button2.Enabled = true;
             button1.Enabled = false;
             button3.Enabled = false;
@@ -1065,8 +1077,6 @@ namespace KerberosConfigMgr
         }
 
 
-
-
         private void Kerberos_Load(object sender, EventArgs e)
         {
             System.Windows.Forms.ToolTip ToolTip1 = new System.Windows.Forms.ToolTip();
@@ -1077,10 +1087,15 @@ namespace KerberosConfigMgr
             ToolTip1.SetToolTip(this.radioButton1, "Reviews/Configures the Kerberos Single Hop Authentication.");
             ToolTip1.SetToolTip(this.radioButton2, "Reviews/Configures the Kerberos Double Hop Authentication(Pass Through Authentication).");
             ToolTip1.SetToolTip(this.comboBox2, "You can select the website/Web application of your choice for review/configuring Kerberos.");
+            
+            //<summary>
+            //ToolTip for each combobox item on hover
+            //</summary>
             comboBox2.DrawMode = DrawMode.OwnerDrawFixed;
             comboBox2.DrawItem += new DrawItemEventHandler(comboBox2_DrawItem);
             comboBox2.DropDownClosed += new EventHandler(comboBox2_DropDownClosed);
             comboBox2.Leave += new EventHandler(comboBox2_Leave);
+            
         }
 
         private void button4_Click(object sender, EventArgs e)
