@@ -32,10 +32,24 @@ namespace KerberosConfigMgr
         static string year = DateTime.Today.Date.Year.ToString();
         static string filename = "k_log" + "_" + day + "_" + month + "_" + year + ".log";
         bool delegation = false;
+        string app2;
+        string app1;
+        string selectedSite1;
+        string selectedSite2;
+        bool isAnonymousChanged = false;
+        bool isBasicChanged = false;
+        bool isAspnetImpersonationChanged = false;
+        bool isDigestChanged = false;
+        bool isWindowsChanged = false;
+        bool isNegotiateChanged = false;
+        bool isUseAppPoolChanged = false;
+        bool isUseKernelChanged = false;
         ToolTip toolTip2 = new ToolTip();
         Logger log = new LoggerConfiguration()
                 .WriteTo.Console()
-                .WriteTo.File("log.txt")
+                .WriteTo.File("kerberosconfigurationlog.txt",
+                    rollingInterval: RollingInterval.Day,
+                    rollOnFileSizeLimit: true)
                 .CreateLogger();
 
 
@@ -62,7 +76,7 @@ namespace KerberosConfigMgr
                         comboBox2.Items.Add(site.Name + app.Path);                        
                 }
             }
-            log.Information("Sites loaded");
+            log.Information("Sites and applications loaded in the combobox");
             textBox1.ReadOnly = true;
             textBox1.ScrollBars = ScrollBars.Vertical;
             textBox1.WordWrap = true;
@@ -77,16 +91,7 @@ namespace KerberosConfigMgr
             w.Close();
             
         }
-        string app2;
-        string selectedSite2;
-        bool isAnonymousChanged = false;
-        bool isBasicChanged = false;
-        bool isAspnetImpersonationChanged = false;
-        bool isDigestChanged = false;
-        bool isWindowsChanged = false;
-        bool isNegotiateChanged = false;
-        bool isUseAppPoolChanged = false;
-        bool isUseKernelChanged = false;
+        
         private void button1_Click(object sender, EventArgs e)
         {
             try
@@ -1040,7 +1045,7 @@ namespace KerberosConfigMgr
         
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            log.Information("Default Selected Site: "+ comboBox2.SelectedItem);
+            log.Information("selected site: "+ comboBox2.SelectedItem);
             button2.Enabled = true;
             button1.Enabled = false;
             button3.Enabled = false;
@@ -1088,6 +1093,8 @@ namespace KerberosConfigMgr
             ToolTip1.SetToolTip(this.radioButton2, "Reviews/Configures the Kerberos Double Hop Authentication(Pass Through Authentication).");
             ToolTip1.SetToolTip(this.comboBox2, "You can select the website/Web application of your choice for review/configuring Kerberos.");
             
+            log.Information("tooltips added for buttons, radiobuttons & comboboxes");
+            
             //<summary>
             //ToolTip for each combobox item on hover
             //</summary>
@@ -1095,7 +1102,8 @@ namespace KerberosConfigMgr
             comboBox2.DrawItem += new DrawItemEventHandler(comboBox2_DrawItem);
             comboBox2.DropDownClosed += new EventHandler(comboBox2_DropDownClosed);
             comboBox2.Leave += new EventHandler(comboBox2_Leave);
-            
+
+            log.Information("Tooltip added for combobox items");
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -1144,8 +1152,7 @@ namespace KerberosConfigMgr
                 MessageBox.Show("Script Generated and Saved to current directory for adding SPNs!", "Success!");
             button4.Enabled = false;
         }
-        string app1;
-        string selectedSite1;
+        
         private void button2_Click(object sender, EventArgs e)
         {
             try
@@ -2108,7 +2115,10 @@ namespace KerberosConfigMgr
 
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
-
+            if(radioButton1.Checked == true)
+                log.Information("radiobutton selected ==> Single Hop Kerberos");
+            else
+                log.Information("radiobutton selected ==> Pass Through Kerberos");
         }
     }
 
