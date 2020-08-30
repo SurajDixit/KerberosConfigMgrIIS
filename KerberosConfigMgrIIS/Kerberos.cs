@@ -30,6 +30,7 @@ namespace KerberosConfigMgr
         static string year = DateTime.Today.Date.Year.ToString();
         static string filename = "k_log" + "_" + day + "_" + month + "_" + year + ".log";
         bool delegation = false;
+        ToolTip toolTip2 = new ToolTip();
         [Flags()]
         public enum UserAccountControl : int
         {
@@ -38,7 +39,6 @@ namespace KerberosConfigMgr
         }
         public Kerberos()
         {
-
             InitializeComponent();
             comboBox2.DropDownStyle = ComboBoxStyle.DropDownList;
             var serverMgr = new ServerManager();
@@ -1037,6 +1037,36 @@ namespace KerberosConfigMgr
             //comboBox2.Enabled = false;
         }
 
+        
+        void comboBox2_Leave(object sender, EventArgs e)
+        {
+            toolTip2.Hide(comboBox2);
+        }
+
+        void comboBox2_DropDownClosed(object sender, EventArgs e)
+        {
+            toolTip2.Hide(comboBox2);
+        }
+
+        void comboBox2_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            if (e.Index < 0) { return; }
+            string text = comboBox2.GetItemText(comboBox2.Items[e.Index]);
+            e.DrawBackground();
+            using (SolidBrush br = new SolidBrush(e.ForeColor))
+            { 
+                e.Graphics.DrawString(text, e.Font, br, e.Bounds); 
+            }
+            if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
+            { 
+                toolTip2.Show(text, comboBox2, e.Bounds.Right, e.Bounds.Bottom); 
+            }
+            e.DrawFocusRectangle();
+        }
+
+
+
+
         private void Kerberos_Load(object sender, EventArgs e)
         {
             System.Windows.Forms.ToolTip ToolTip1 = new System.Windows.Forms.ToolTip();
@@ -1047,6 +1077,10 @@ namespace KerberosConfigMgr
             ToolTip1.SetToolTip(this.radioButton1, "Reviews/Configures the Kerberos Single Hop Authentication.");
             ToolTip1.SetToolTip(this.radioButton2, "Reviews/Configures the Kerberos Double Hop Authentication(Pass Through Authentication).");
             ToolTip1.SetToolTip(this.comboBox2, "You can select the website/Web application of your choice for review/configuring Kerberos.");
+            comboBox2.DrawMode = DrawMode.OwnerDrawFixed;
+            comboBox2.DrawItem += new DrawItemEventHandler(comboBox2_DrawItem);
+            comboBox2.DropDownClosed += new EventHandler(comboBox2_DropDownClosed);
+            comboBox2.Leave += new EventHandler(comboBox2_Leave);
         }
 
         private void button4_Click(object sender, EventArgs e)

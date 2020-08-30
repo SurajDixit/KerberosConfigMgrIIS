@@ -43,7 +43,7 @@
             // textBox1
             // 
             this.textBox1.Location = new System.Drawing.Point(25, 226);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(2);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(825, 489);
@@ -54,7 +54,7 @@
             // 
             this.comboBox2.FormattingEnabled = true;
             this.comboBox2.Location = new System.Drawing.Point(282, 31);
-            this.comboBox2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.comboBox2.Margin = new System.Windows.Forms.Padding(2);
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(316, 28);
             this.comboBox2.TabIndex = 1;
@@ -63,7 +63,7 @@
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(370, 128);
-            this.button1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button1.Margin = new System.Windows.Forms.Padding(2);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(149, 38);
             this.button1.TabIndex = 2;
@@ -74,7 +74,7 @@
             // progressBar1
             // 
             this.progressBar1.Location = new System.Drawing.Point(25, 185);
-            this.progressBar1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.progressBar1.Margin = new System.Windows.Forms.Padding(2);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(825, 25);
             this.progressBar1.TabIndex = 3;
@@ -82,7 +82,7 @@
             // button2
             // 
             this.button2.Location = new System.Drawing.Point(131, 127);
-            this.button2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button2.Margin = new System.Windows.Forms.Padding(2);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(142, 38);
             this.button2.TabIndex = 4;
@@ -93,7 +93,7 @@
             // button3
             // 
             this.button3.Location = new System.Drawing.Point(625, 128);
-            this.button3.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button3.Margin = new System.Windows.Forms.Padding(2);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(149, 37);
             this.button3.TabIndex = 5;
@@ -104,7 +104,7 @@
             // button4
             // 
             this.button4.Location = new System.Drawing.Point(346, 730);
-            this.button4.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button4.Margin = new System.Windows.Forms.Padding(2);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(184, 37);
             this.button4.TabIndex = 6;
@@ -116,7 +116,7 @@
             // 
             this.radioButton1.AutoSize = true;
             this.radioButton1.Location = new System.Drawing.Point(208, 80);
-            this.radioButton1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.radioButton1.Margin = new System.Windows.Forms.Padding(2);
             this.radioButton1.Name = "radioButton1";
             this.radioButton1.Size = new System.Drawing.Size(180, 24);
             this.radioButton1.TabIndex = 7;
@@ -129,7 +129,7 @@
             // 
             this.radioButton2.AutoSize = true;
             this.radioButton2.Location = new System.Drawing.Point(499, 80);
-            this.radioButton2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.radioButton2.Margin = new System.Windows.Forms.Padding(2);
             this.radioButton2.Name = "radioButton2";
             this.radioButton2.Size = new System.Drawing.Size(196, 24);
             this.radioButton2.TabIndex = 8;
@@ -154,7 +154,7 @@
             this.Controls.Add(this.textBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
             this.Name = "Kerberos";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
