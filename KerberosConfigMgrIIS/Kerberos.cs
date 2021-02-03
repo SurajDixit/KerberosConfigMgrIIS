@@ -1268,7 +1268,7 @@ namespace KerberosConfigMgr
                         if (anonymous == true)
                         {
                             textBox1.Text += "==> Anonymous authentication is enabled (X)\r\n";
-                            log.Information("Anonymous authentication is enabled (X)");
+                            log.Warning("Anonymous authentication is enabled (X)");
                         }
 
                         else
@@ -1285,7 +1285,7 @@ namespace KerberosConfigMgr
                         if (basic == true)
                         {
                             textBox1.Text += "==> Basic authentication is enabled (X)\r\n";
-                            log.Information("Basic authentication is enabled (X)");
+                            log.Warning("Basic authentication is enabled (X)");
                         }
 
                         else {
@@ -1302,7 +1302,7 @@ namespace KerberosConfigMgr
                         if (digest == true)
                         {
                             textBox1.Text += "==> Digest authentication is enabled (X)\r\n";
-                            log.Information("Digest authentication is enabled (X)");
+                            log.Warning("Digest authentication is enabled (X)");
                         }
                            
                         else
@@ -1327,7 +1327,7 @@ namespace KerberosConfigMgr
                             if (aspnetimpersonation == true)
                             {
                                 textBox1.Text += "==> ASP.NET Impersonation is enabled (X)\r\n";
-                                log.Information("ASP.NET Impersonation is enabled (X)");
+                                log.Warning("ASP.NET Impersonation is enabled (X)");
                             }
 
                             else
@@ -1348,7 +1348,7 @@ namespace KerberosConfigMgr
                             else
                             {
                                 textBox1.Text += "==> ASP.NET Impersonation is disabled (X)\r\n";
-                                log.Information("ASP.NET Impersonation is enabled (X)");
+                                log.Warning("ASP.NET Impersonation is enabled (X)");
                             }
                                 
                         }
@@ -1363,7 +1363,7 @@ namespace KerberosConfigMgr
                         if (win == false)
                         {
                             textBox1.Text += "==> Windows authentication is disabled (X)\r\n";
-                            log.Information("Windows authentication is disabled (X)");
+                            log.Warning("Windows authentication is disabled (X)");
                         }
                             
                         else
@@ -1391,8 +1391,8 @@ namespace KerberosConfigMgr
                             isNegotiateOnPriority = false;
                             textBox1.Text += "==> Negotiate is not a priority! Current Priority is " + onPriority + " (X)\r\n";
                             textBox1.Text += "==> Negotiate should be a top priority..\r\n";
-                            log.Information("Negotiate is not a priority! Current Priority is " + onPriority + " (X)");
-                            log.Information("Negotiate should be a top priority");
+                            log.Warning("Negotiate is not a priority! Current Priority is " + onPriority + " (X)");
+                            log.Warning("Negotiate should be a top priority");
                         }
 
                         Thread.Sleep(100);
@@ -1447,11 +1447,13 @@ namespace KerberosConfigMgr
                             if (useAppPool == true)
                             {
                                 textBox1.Text += "==> useAppPoolCredentials set to true (\u2714)\r\n";
+                                log.Information("useAppPoolCredentials set to true (\u2714)");
                             }
 
                             else
                             {
                                 textBox1.Text += "==> useAppPoolCredentials set to false (X)\r\n";
+                                log.Warning("useAppPoolCredentials set to false (X)");
                             }
                                 
                             Thread.Sleep(100);
@@ -1461,11 +1463,13 @@ namespace KerberosConfigMgr
                             if (useKernel == true)
                             {
                                 textBox1.Text += "==> useKernelMode set to true (\u2714)\r\n";
+                                log.Information("useKernelMode set to true (\u2714)");
                             }
 
                             else
                             {
                                 textBox1.Text += "==> useKernelMode set to false (X)\r\n";
+                                log.Warning("useKernelMode set to false (X)");
                             }
                                 
                             Thread.Sleep(100);
@@ -1475,17 +1479,33 @@ namespace KerberosConfigMgr
                         {
                             bool useAppPool = (bool)windowsAuthenticationSection["useAppPoolCredentials"];
                             if (useAppPool == true)
+                            {
                                 textBox1.Text += "==> useAppPoolCredentials set to true (X)\r\n";
+                                log.Warning("useAppPoolCredentials set to true (X)");
+                            }
+
                             else
+                            {
                                 textBox1.Text += "==> useAppPoolCredentials set to false (\u2714)\r\n";
+                                log.Information("useAppPoolCredentials set to false (\u2714)");
+                            }
+                                
                             Thread.Sleep(100);
                             System.Windows.Forms.Application.DoEvents();
 
                             bool useKernel = (bool)windowsAuthenticationSection["useKernelMode"];
                             if (useKernel == true)
+                            {
                                 textBox1.Text += "==> useKernelMode set to true (\u2714)\r\n";
+                                log.Information("useKernelMode set to true (\u2714)");
+                            }
+
                             else
+                            {
                                 textBox1.Text += "==> useKernelMode set to false (X)\r\n";
+                                log.Warning("useKernelMode set to false (X)");
+                            }
+                                
                             Thread.Sleep(100);
                             System.Windows.Forms.Application.DoEvents();
                         }
@@ -1493,6 +1513,7 @@ namespace KerberosConfigMgr
                         textBox1.Text += "===============================================================\r\n";
                         Thread.Sleep(100);
                         System.Windows.Forms.Application.DoEvents();
+
 
                         //<summary>
                         //Adding the condition to check if user wants to see the available SPNs
@@ -1505,16 +1526,20 @@ namespace KerberosConfigMgr
                             textBox1.Text += "\r\n==> Fetching SPNs for the account set for Application pool identity..\r\n";
                             Thread.Sleep(100);
                             System.Windows.Forms.Application.DoEvents();
+                            log.Information("Fetching SPNs for the account set for Application pool identity..");
+
                             if (isUsingPoolIdentity == true)
                             {
                                 isAppPoolSetGlobal = isUsingPoolIdentity;
                                 bool isSetSPNsSmall = false;
                                 UName = pool.ProcessModel.UserName;
                                 bool isSetSPNsCaps = false;
-                                textBox1.Text += "\r\n=========SPNs set for the Custom account: " + UName + "=========\r\n";
+                                textBox1.Text += "\r\n========= SPNs set for the Custom account: " + UName + " =========\r\n";
+                                log.Information("========= SPNs set for the Custom account: " + UName + " =========");
                                 Thread.Sleep(100);
                                 System.Windows.Forms.Application.DoEvents();
                                 textBox1.Text += "===============================================================\r\n";
+                                log.Information("===============================================================");
                                 Thread.Sleep(100);
                                 System.Windows.Forms.Application.DoEvents();
                                 UName = pool.ProcessModel.UserName;
@@ -1527,6 +1552,8 @@ namespace KerberosConfigMgr
                                         textBox1.Text += value + "\r\n";
                                         Thread.Sleep(100);
                                         System.Windows.Forms.Application.DoEvents();
+                                        log.Information("==> " + value);
+
                                         isSetSPNsSmall = true;
                                     }
                                     else
@@ -1543,6 +1570,7 @@ namespace KerberosConfigMgr
                                         textBox1.Text += value + "\r\n";
                                         Thread.Sleep(100);
                                         System.Windows.Forms.Application.DoEvents();
+                                        log.Information("==> " + value);
                                         isSetSPNsCaps = true;
                                     }
                                     else
@@ -1557,11 +1585,13 @@ namespace KerberosConfigMgr
                                     textBox1.Text += "==> No SPNs set for this account (X)\r\n";
                                     Thread.Sleep(100);
                                     System.Windows.Forms.Application.DoEvents();
+                                    log.Warning("No SPNs set for this account (X)");
                                 }
 
                                 textBox1.Text += "===============================================================\r\n";
                                 Thread.Sleep(100);
                                 System.Windows.Forms.Application.DoEvents();
+                                log.Information("===============================================================");
                             }
 
                             else
@@ -1571,12 +1601,15 @@ namespace KerberosConfigMgr
                                 string computerName = System.Environment.GetEnvironmentVariable("COMPUTERNAME");
                                 isAppPoolSetGlobal = false;
                                 UserGlobal = computerName;
-                                textBox1.Text += "\r\n=========SPNs set for the " + computerName + " account=========\r\n";
+                                textBox1.Text += "\r\n========= SPNs set for the " + computerName + " account =========\r\n";
                                 Thread.Sleep(100);
                                 System.Windows.Forms.Application.DoEvents();
+                                log.Information("========= SPNs set for the " + computerName + " account =========");
                                 textBox1.Text += "===============================================================\r\n";
                                 Thread.Sleep(100);
                                 System.Windows.Forms.Application.DoEvents();
+                                log.Information("===============================================================");
+                                
                                 foreach (string value in ListSPN("HOST", isUsingPoolIdentity, computerName))
                                 {
                                     if (value != null)
@@ -1584,6 +1617,7 @@ namespace KerberosConfigMgr
                                         textBox1.Text += value + "\r\n";
                                         Thread.Sleep(100);
                                         System.Windows.Forms.Application.DoEvents();
+                                        log.Information("==> " + value);
                                         isSetSPNsSmall = true;
                                     }
                                     else
@@ -1600,6 +1634,7 @@ namespace KerberosConfigMgr
                                         textBox1.Text += value + "\r\n";
                                         Thread.Sleep(100);
                                         System.Windows.Forms.Application.DoEvents();
+                                        log.Information("==> " + value);
                                         isSetSPNsCaps = true;
                                     }
                                     else
@@ -1611,11 +1646,13 @@ namespace KerberosConfigMgr
                                     textBox1.Text += "No SPNs set for this account (X)\r\n";
                                     Thread.Sleep(100);
                                     System.Windows.Forms.Application.DoEvents();
+                                    log.Warning("No SPNs set for this account (X)");
                                 }
 
                                 textBox1.Text += "===============================================================\r\n";
                                 Thread.Sleep(100);
                                 System.Windows.Forms.Application.DoEvents();
+                                log.Information("===============================================================");
                             }
                         }
 
@@ -1631,10 +1668,12 @@ namespace KerberosConfigMgr
                         {
                             if (DelegationQuery == true)
                             {
-                                textBox1.Text += "\r\n=========Delegation Settings=========\r\n";
+                                textBox1.Text += "\r\n========= Delegation Settings =========\r\n";
                                 textBox1.Text += "===============================================================\r\n";
                                 Thread.Sleep(100);
                                 System.Windows.Forms.Application.DoEvents();
+                                log.Information("========= Delegation Settings =========");
+                                log.Information("===============================================================");
                                 using (Domain domain = Domain.GetCurrentDomain())
                                 {
                                     DirectoryEntry ouDn = new DirectoryEntry();
@@ -1665,6 +1704,7 @@ namespace KerberosConfigMgr
                                             textBox1.Text += "This user is trusted for delegation to any service(Kerberos only)..\r\n";
                                             isDelegationSet = true;
                                             isConstrainedDelegationSet = false;
+                                            log.Information("This user is trusted for delegation to any service(Kerberos only)");
                                         }
                                         else if (arr != null)
                                         {
@@ -1672,15 +1712,17 @@ namespace KerberosConfigMgr
                                             textBox1.Text += "This user is trusted for delegation to specified services only..\r\n";
                                             Thread.Sleep(100);
                                             System.Windows.Forms.Application.DoEvents();
-
+                                            log.Information("This user is trusted for delegation to specified services only");
                                             if ((userAccountControlFlags & (int)UserAccountControl.TRUSTED_TO_AUTH_FOR_DELEGATION) == (int)UserAccountControl.TRUSTED_TO_AUTH_FOR_DELEGATION)
                                             {
                                                 textBox1.Text += "\r\n'Use any authentication protocol' is set..\r\n";
+                                                log.Information("'Use any authentication protocol' is set");
                                             }
 
                                             else
                                             {
                                                 textBox1.Text += "\r\n'Use Kerberos only' is set..\r\n";
+                                                log.Information("'Use Kerberos only' is set");
                                             }
                                             Thread.Sleep(100);
                                             System.Windows.Forms.Application.DoEvents();
@@ -1688,12 +1730,14 @@ namespace KerberosConfigMgr
                                             textBox1.Text += "\r\nServices to which this account can present delegated credentials:\r\n\r\n";
                                             Thread.Sleep(100);
                                             System.Windows.Forms.Application.DoEvents();
+                                            log.Information("Services to which this account can present delegated credentials:");
 
                                             foreach (object o in arr)
                                             {
                                                 textBox1.Text += o + "\r\n";
                                                 Thread.Sleep(100);
                                                 System.Windows.Forms.Application.DoEvents();
+                                                log.Information("==> " + o);
                                             }
 
                                             isDelegationSet = true;
@@ -1706,6 +1750,7 @@ namespace KerberosConfigMgr
                                             System.Windows.Forms.Application.DoEvents();
                                             isDelegationSet = false;
                                             isConstrainedDelegationSet = false;
+                                            log.Warning("This user is not trusted for delegation") ;
                                         }
 
                                     }
@@ -1714,12 +1759,15 @@ namespace KerberosConfigMgr
                                 textBox1.Text += "===============================================================\r\n";
                                 Thread.Sleep(100);
                                 System.Windows.Forms.Application.DoEvents();
+                                log.Information("===============================================================");
                             }
                         }
                         catch (Exception e2)
                         {
                             textBox1.Text += "\r\nError\r\n=======\r\n" + e2 + "\r\n\r\n";
                             MessageBox.Show("" + e2, "Fatal Error!");
+                            log.Error("===== Error =====");
+                            log.Error(e2.ToString());
                         }
 
                         progressBar1.Value = 80;
@@ -1727,30 +1775,42 @@ namespace KerberosConfigMgr
                         //<summary>
                         //Display required SPNs
                         //</summary>
-                        DialogResult result1 = MessageBox.Show("Are you using hostname for the website?", "Alert!", MessageBoxButtons.YesNo);
 
-                        Label: if (result1.ToString().Equals("Yes"))
+                        textBox1.Text += "\r\n========= How are we browsing the site? =========\r\n";
+
+                        string MachineName = System.Environment.GetEnvironmentVariable("COMPUTERNAME");
+                        
+
+                        DialogResult result1 = MessageBox.Show("Are you using '"+ MachineName+ "' or '"+ System.Net.Dns.GetHostEntry(Environment.MachineName).HostName + "' to browse the website?", "Alert!", MessageBoxButtons.YesNo);
+
+                        //DialogResult result1 = MessageBox.Show("Are you using custom hostname for the website?", "Alert!", MessageBoxButtons.YesNo);
+
+                        Label: if (result1.ToString().Equals("No"))
                         {
+
                             string customHostName = "";
                             while (customHostName == "")
                             {
-                                customHostName = Prompt.ShowDialog("Enter the hostname:", "Important!");
+                                customHostName = Prompt.ShowDialog("Enter the custom hostname:", "Important!");
                                 if (customHostName == "")
                                 {
                                     MessageBox.Show("No hostname is entered!", "Error!");
-                                    result1 = MessageBox.Show("Are you using hostname for the website?", "Alert!", MessageBoxButtons.YesNo);
+                                    result1 = MessageBox.Show("Are you using '" + MachineName + "' or '" + System.Net.Dns.GetHostEntry(Environment.MachineName).HostName + "' to browse the website?", "Alert!", MessageBoxButtons.YesNo);
                                     goto Label;
                                 }
 
                             }
 
-                            textBox1.Text += "\r\n==> The hostname you entered is : " + customHostName + "\r\n";
+                            textBox1.Text += "\r\n==> The custom hostname you entered is : " + customHostName + "\r\n";
                             Thread.Sleep(100);
                             System.Windows.Forms.Application.DoEvents();
 
+                            textBox1.Text += "===============================================================\r\n";
+                            log.Information("===============================================================");
+
                             progressBar1.Value = 90;
 
-                            textBox1.Text += "\r\n========SPNs needed for kerberos to work========\r\n";
+                            textBox1.Text += "\r\n======== SPNs needed for kerberos to work ========\r\n";
                             Thread.Sleep(100);
                             System.Windows.Forms.Application.DoEvents();
 
@@ -1815,9 +1875,16 @@ namespace KerberosConfigMgr
                             Thread.Sleep(100);
                             System.Windows.Forms.Application.DoEvents();
                         }
+                       
+
                         else
                         {
-                            textBox1.Text += "\r\n==> You are not using any hostname.\r\n\r\n========SPNs needed for kerberos to work========\r\n";
+                            textBox1.Text += "\r\n==> You are not using any hostname.\r\n";
+
+                            textBox1.Text += "===============================================================\r\n";
+                            log.Information("===============================================================");
+
+                            textBox1.Text += "\r\n\r\n======== SPNs needed for kerberos to work ========\r\n";
                             Thread.Sleep(100);
                             System.Windows.Forms.Application.DoEvents();
 

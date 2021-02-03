@@ -21,7 +21,7 @@ namespace KerberosConfigMgr
             };
             Label textLabel = new Label()
             {
-                Left = 65,
+                Left = 40,
                 Top = 25,
                 Text = text,
                 Width = 150
