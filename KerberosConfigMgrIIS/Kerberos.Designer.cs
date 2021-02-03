@@ -123,7 +123,7 @@
             this.radioButton1.TabStop = true;
             this.radioButton1.Text = "Single Hop Kerberos";
             this.radioButton1.UseVisualStyleBackColor = true;
-            this.radioButton1.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
+            this.radioButton1.CheckedChanged += new System.EventHandler(this.radioButtons_CheckedChanged);
             // 
             // radioButton2
             // 
@@ -136,6 +136,7 @@
             this.radioButton2.TabStop = true;
             this.radioButton2.Text = "Pass through Kerberos";
             this.radioButton2.UseVisualStyleBackColor = true;
+            this.radioButton2.CheckedChanged += new System.EventHandler(this.radioButtons_CheckedChanged);
             // 
             // Kerberos
             // 
