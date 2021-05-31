@@ -486,10 +486,10 @@ namespace KerberosConfigMgr
                                 System.Windows.Forms.Application.DoEvents();
                                 UName = pool.ProcessModel.UserName;
                                 UserGlobal = UName;
-                                string[] split = UName.Split('\\');
-                                UserGlobalDeleg = split[1];
+                                string username = extractUsername(UName);
+                                UserGlobalDeleg = username;
                                 isUsingCustomAppPoolDelegation = true;
-                                foreach (string value in ListSPN("HTTP", isUsingPoolIdentity, split[1]))
+                                foreach (string value in ListSPN("HTTP", isUsingPoolIdentity, username))
                                 {
                                     if (value != null)
                                     {
@@ -505,7 +505,7 @@ namespace KerberosConfigMgr
 
                                 }
 
-                                foreach (string value in ListSPN("http", isUsingPoolIdentity, split[1]))
+                                foreach (string value in ListSPN("http", isUsingPoolIdentity, username))
                                 {
                                     if (value != null)
                                     {
@@ -613,8 +613,8 @@ namespace KerberosConfigMgr
                                     DirectorySearcher search = new DirectorySearcher(ouDn);
                                     if (isUsingPoolIdentity == true)
                                     {
-                                        string[] User = poolUser.Split('\\');
-                                        search.Filter = "(sAMAccountName=" + User[1] + ")";
+                                        string user = extractUsername(poolUser);
+                                        search.Filter = "(sAMAccountName=" + user + ")";
                                     }
                                     else
                                     {
@@ -1544,8 +1544,8 @@ namespace KerberosConfigMgr
                                 System.Windows.Forms.Application.DoEvents();
                                 UName = pool.ProcessModel.UserName;
                                 UserGlobal = UName;
-                                string[] split = UName.Split('\\');
-                                foreach (string value in ListSPN("HTTP",isUsingPoolIdentity, split[1]))
+                                string username = extractUsername(UName);
+                                foreach (string value in ListSPN("HTTP",isUsingPoolIdentity, username))
                                 {
                                     if (value != null)
                                     {
@@ -1563,7 +1563,7 @@ namespace KerberosConfigMgr
 
                                 }
 
-                                foreach (string value in ListSPN("http", isUsingPoolIdentity, split[1]))
+                                foreach (string value in ListSPN("http", isUsingPoolIdentity, username))
                                 {
                                     if (value != null)
                                     {
@@ -1680,8 +1680,8 @@ namespace KerberosConfigMgr
                                     DirectorySearcher search = new DirectorySearcher(ouDn);
                                     if (isUsingPoolIdentity == true)
                                     {
-                                        string[] User = poolUser.Split('\\');
-                                        search.Filter = "(sAMAccountName=" + User[1] + ")";
+                                        string user = extractUsername(poolUser);
+                                        search.Filter = "(sAMAccountName=" + user + ")";
                                     }
                                     else
                                     {
@@ -2339,5 +2339,26 @@ namespace KerberosConfigMgr
 
 
         //}
+
+        private string extractUsername(string rawName)
+        {
+            string username = string.Empty;
+
+            // Extract username from full name with domain components
+            if (rawName.IndexOf('\\') > 0)
+            {
+                // NT style user name
+                string[] parts = rawName.Split('\\');
+                username = parts[1];
+            }
+            else if (rawName.IndexOf('@') > 0)
+            {
+                // New style name
+                string[] parts = rawName.Split('@');
+                username = parts[0];
+            }
+
+            return username;
+        }
     }
 }
