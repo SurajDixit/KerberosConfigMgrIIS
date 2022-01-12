@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Serilog;
+
 
 namespace KerberosConfigMgr
 {
@@ -15,6 +16,7 @@ namespace KerberosConfigMgr
         [STAThread]
         static void Main()
         {
+            
             try {
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
@@ -23,7 +25,19 @@ namespace KerberosConfigMgr
             }
             catch(Exception e)
             {
+                StreamWriter log;
+                String _filename = "kerberos" + DateTime.Now.ToString("yyyyMMdd") + ".log";
+                if (!File.Exists(_filename))
+                {
+                    log = new StreamWriter(_filename);
+                }
+                else
+                {
+                    log = File.AppendText(_filename);
+                }
                 MessageBox.Show(e+"" , "--Fatal Error--");
+                log.WriteLine(DateTime.Now + ": " + e + "", "--Fatal Error--");
+                log.Dispose();
             }
             
         }
