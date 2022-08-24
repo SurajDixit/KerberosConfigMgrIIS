@@ -1939,24 +1939,24 @@ namespace KerberosConfigMgr
                                 string computerName = System.Environment.GetEnvironmentVariable("COMPUTERNAME");
 
                                 textBox1.Text += "Below SPNs should be on account: " + UName + "\r\n\r\n";
-                                log.WriteLine(DateTime.Now + ": " + "Below SPNs should be on account: " + UName + "\r\n\r\n");
+                                log.WriteLine(DateTime.Now + ": " + "Below SPNs should be on account: " + UName);
                                 textBox1.Text += "HTTP/" + computerName + "\r\n";
-                                log.WriteLine(DateTime.Now + ": " + "HTTP/" + computerName + "\r\n");
+                                log.WriteLine(DateTime.Now + ": " + "HTTP/" + computerName);
                                 try
                                 {
                                     string fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName;
 
                                     textBox1.Text += "HTTP/" + fqdn + "\r\n";
-                                    log.WriteLine(DateTime.Now + ": " + "HTTP/" + fqdn + "\r\n");
+                                    log.WriteLine(DateTime.Now + ": " + "HTTP/" + fqdn);
                                     textBox1.Text += "===============================================================\r\n";
-                                    log.WriteLine(DateTime.Now + ": " + "===============================================================\r\n");
+                                    log.WriteLine(DateTime.Now + ": " + "===============================================================");
                                     Thread.Sleep(100);
                                     System.Windows.Forms.Application.DoEvents();
                                 }
                                 catch (Exception e3)
                                 {
                                     textBox1.Text += "\r\nError\r\n=======\r\n" + e3 + "\r\n\r\n";
-                                    log.WriteLine(DateTime.Now + ": " + "\r\nError\r\n=======\r\n" + e3 + "\r\n\r\n");
+                                    log.WriteLine(DateTime.Now + ": " + "Error\r\n=======\r\n" + e3);
                                     MessageBox.Show("" + e3, "Fatal Error!");
                                     Thread.Sleep(100);
                                     System.Windows.Forms.Application.DoEvents();
@@ -1970,24 +1970,24 @@ namespace KerberosConfigMgr
                                     string computerName = System.Environment.GetEnvironmentVariable("COMPUTERNAME");
 
                                     textBox1.Text += "Below SPNs should be on account: " + computerName + "\r\n\r\n";
-                                    log.WriteLine(DateTime.Now + ": " + "Below SPNs should be on account: " + computerName + "\r\n\r\n");
+                                    log.WriteLine(DateTime.Now + ": " + "Below SPNs should be on account: " + computerName);
                                     textBox1.Text += "HOST/" + computerName + "\r\n";
-                                    log.WriteLine(DateTime.Now + ": " + "HOST/" + computerName + "\r\n");
+                                    log.WriteLine(DateTime.Now + ": " + "HOST/" + computerName);
                                     string fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName;
                                     textBox1.Text += "HOST/" + fqdn + "\r\n";
-                                    log.WriteLine(DateTime.Now + ": " + "HOST/" + fqdn + "\r\n");
+                                    log.WriteLine(DateTime.Now + ": " + "HOST/" + fqdn);
                                     textBox1.Text += "===============================================================\r\n";
-                                    log.WriteLine(DateTime.Now + ": " + "===============================================================\r\n");
+                                    log.WriteLine(DateTime.Now + ": " + "===============================================================");
                                     Thread.Sleep(100);
                                     System.Windows.Forms.Application.DoEvents();
                                 }
                                 catch (Exception e4)
                                 {
                                     textBox1.Text += "\r\nError\r\n=======\r\n" + e4 + "\r\n\r\n";
-                                    log.WriteLine(DateTime.Now + ": " + "\r\nError\r\n=======\r\n" + e4 + "\r\n\r\n");
+                                    log.WriteLine(DateTime.Now + ": " + "Error\r\n=======\r\n" + e4);
                                     MessageBox.Show("" + e4, "Fatal Error!");
                                     textBox1.Text += "===============================================================\r\n";
-                                    log.WriteLine(DateTime.Now + ": " + "===============================================================\r\n");
+                                    log.WriteLine(DateTime.Now + ": " + "===============================================================");
                                 }
 
                             }
@@ -1998,9 +1998,9 @@ namespace KerberosConfigMgr
                         if (DelegationQuery == true)
                         {
                             textBox1.Text += "\r\n========Required Delegation Settings========\r\n";
-                            log.WriteLine(DateTime.Now + ": " + "\r\n========Required Delegation Settings========\r\n");
+                            log.WriteLine(DateTime.Now + ": " + "\r\n========Required Delegation Settings========");
                             textBox1.Text += "===============================================================\r\n";
-                            log.WriteLine(DateTime.Now + ": " + "===============================================================\r\n");
+                            log.WriteLine(DateTime.Now + ": " + "===============================================================");
                             Thread.Sleep(100);
                             System.Windows.Forms.Application.DoEvents();
 

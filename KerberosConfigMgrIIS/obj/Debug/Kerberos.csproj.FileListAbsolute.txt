@@ -95,4 +95,3 @@ C:\Users\sudixi\source\repos\KerberosConfigMgrIIS\KerberosConfigMgrIIS\obj\Debug
 C:\Users\sudixi\source\repos\KerberosConfigMgrIIS\KerberosConfigMgrIIS\obj\Debug\KerberosConfigMgrIIS.exe
 C:\Users\sudixi\source\repos\KerberosConfigMgrIIS\KerberosConfigMgrIIS\obj\Debug\KerberosConfigMgrIIS.pdb
 C:\Users\sudixi\source\repos\KerberosConfigMgrIIS\KerberosConfigMgrIIS\obj\Debug\Kerberos.csproj.AssemblyReference.cache
-C:\Users\sudixi\source\repos\KerberosConfigMgrIIS\KerberosConfigMgrIIS\obj\Debug\Kerberos.csproj.SuggestedBindingRedirects.cache
