@@ -1807,7 +1807,7 @@ namespace KerberosConfigMgr
                             string customHostName = "";
                             while (customHostName == "")
                             {
-                                customHostName = Prompt.ShowDialog("Enter the custom hostname:", "Important!");
+                                customHostName = Prompt.ShowDialog("Enter the custom hostname:", "Important!Enter the custom hostname.");
                                 if (customHostName == "")
                                 {
                                     MessageBox.Show("No hostname is entered!", "Error!");

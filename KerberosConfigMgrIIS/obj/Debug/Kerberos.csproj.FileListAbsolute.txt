@@ -87,11 +87,11 @@ C:\Users\sudixi\source\repos\KerberosConfigMgrIIS\KerberosConfigMgrIIS\bin\Debug
 C:\Users\sudixi\source\repos\KerberosConfigMgrIIS\KerberosConfigMgrIIS\bin\Debug\KerberosConfigMgrIIS.exe
 C:\Users\sudixi\source\repos\KerberosConfigMgrIIS\KerberosConfigMgrIIS\bin\Debug\KerberosConfigMgrIIS.pdb
 C:\Users\sudixi\source\repos\KerberosConfigMgrIIS\KerberosConfigMgrIIS\bin\Debug\Microsoft.Web.Administration.dll
+C:\Users\sudixi\source\repos\KerberosConfigMgrIIS\KerberosConfigMgrIIS\obj\Debug\Kerberos.csproj.AssemblyReference.cache
 C:\Users\sudixi\source\repos\KerberosConfigMgrIIS\KerberosConfigMgrIIS\obj\Debug\KerberosConfigMgr.Kerberos.resources
 C:\Users\sudixi\source\repos\KerberosConfigMgrIIS\KerberosConfigMgrIIS\obj\Debug\KerberosConfigMgr.Properties.Resources.resources
 C:\Users\sudixi\source\repos\KerberosConfigMgrIIS\KerberosConfigMgrIIS\obj\Debug\Kerberos.csproj.GenerateResource.cache
 C:\Users\sudixi\source\repos\KerberosConfigMgrIIS\KerberosConfigMgrIIS\obj\Debug\Kerberos.csproj.CoreCompileInputs.cache
-C:\Users\sudixi\source\repos\KerberosConfigMgrIIS\KerberosConfigMgrIIS\obj\Debug\Kerberos.csproj.CopyComplete
+C:\Users\sudixi\source\repos\KerberosConfigMgrIIS\KerberosConfigMgrIIS\obj\Debug\Kerberos.csproj.Up2Date
 C:\Users\sudixi\source\repos\KerberosConfigMgrIIS\KerberosConfigMgrIIS\obj\Debug\KerberosConfigMgrIIS.exe
 C:\Users\sudixi\source\repos\KerberosConfigMgrIIS\KerberosConfigMgrIIS\obj\Debug\KerberosConfigMgrIIS.pdb
-C:\Users\sudixi\source\repos\KerberosConfigMgrIIS\KerberosConfigMgrIIS\obj\Debug\Kerberos.csproj.AssemblyReference.cache
